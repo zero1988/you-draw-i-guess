@@ -2,13 +2,21 @@ import { defineComponent, PropType } from 'vue'
 import styles from './index.module.css'
 
 const buttonProps = {
-    text: {
-        type: String,
-        default: 'Button'
+    link: {
+        type: Boolean,
+        default: false
     },
-    type: {
-        type: String as PropType<'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link'>,
-        default: 'primary'
+    color: {
+        type: String as PropType<'green' | 'yellow'>,
+        default: 'green'
+    },
+    width: {
+        type: Number,
+        default: 300,
+    },
+    height: {
+        type: Number,
+        default: 30,
     }
 }
 
@@ -20,7 +28,15 @@ export default defineComponent({
     },
     render() {
         return (
-            <div class={`${this.$props.type === 'link' ? '' : 'button'} ${this.$props.type}`}>{this.text}</div>
+            <div class={`${this.$props.link ? styles.link : styles.button} ${this.$props.link ? '' : styles[this.$props.color]
+                }`}
+                style={{
+                    width: `${this.$props.width}px`,
+                    height: `${this.$props.height}px`,
+                    lineHeight: `${this.$props.height}px`
+                }}>
+                {this.$slots.default?.()}
+            </div>
         )
     }
 })

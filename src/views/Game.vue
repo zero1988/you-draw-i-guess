@@ -1,20 +1,20 @@
 <template>
     <div>
-        <div>
+        <div class="title-wrapper">
             <div>房间号</div>
             <div>观众数量</div>
             <div>换房间</div>
         </div>
-        <div>
+        <div class="main-wrapper">
             <div>计时器</div>
             <div>词语</div>
             <PaintPanel></PaintPanel>
             <ReadyPanel></ReadyPanel>
         </div>
-        <div>
+        <div class="seat-wrapper">
             <Seat v-for="(index) in 5" :key="index"></Seat>
         </div>
-        <div>
+        <div class="message-wrapper">
             <Message v-for="(index) in 15" :key="index"></Message>
         </div>
         <sendBox></sendBox>

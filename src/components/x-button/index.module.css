@@ -1,25 +1,24 @@
-.button {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #000;
-    font-size: 1rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
 .link {
-    color: #000;
+    color: rgb(53, 55, 189);
     text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
 }
 
-.primary {
-    background-color: #0070f3;
-    color: #fff;
+.button {
+    border-radius: 8px;
+    border: 2px solid #000;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.green {
+    background-color: rgb(153, 224, 193);
+    color: #000;
+}
+
+.yellow {
+    background-color: rgb(250, 232, 122);
+    color: #000;
 }

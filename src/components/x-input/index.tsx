@@ -1,6 +1,15 @@
 import { defineComponent, PropType } from 'vue'
+import styles from './index.module.css'
 
 const inputProps = {
+    width: {
+        type: Number,
+        default: 300
+    },
+    height: {
+        type: Number,
+        default: 30
+    },
     type: {
         type: String as PropType<'text' | 'password'>,
         default: 'text'
@@ -20,8 +29,12 @@ export default defineComponent({
     },
     render() {
         return (
-            <div>
-                <input type={this.$props.type} />
+            <div class={styles.wrapper}
+                style={{
+                    width: `${this.$props.width}px`,
+                    height: `${this.$props.height}px`
+                }}>
+                <input type={this.$props.type} placeholder={this.$props.placeholder} />
             </div>
         )
     }

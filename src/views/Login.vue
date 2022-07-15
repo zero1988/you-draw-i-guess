@@ -1,9 +1,11 @@
 <template>
     <div>
-        <XInput :placeholder="'账号'" v-model="userId"></XInput>
-        <XInput :placeholder="'密码'" :type="'password'" v-model="password"></XInput>
-        <XButton @click="doLogin">登录</XButton>
-        <XButton>注册新用户</XButton>
+        <XInput :placeholder="'账号'" v-model="userId" class="margin-top-10"></XInput>
+        <XInput :placeholder="'密码'" :type="'password'" v-model="password" class="margin-top-10"></XInput>
+        <XButton @click="doLogin" class="margin-top-10">
+            登录
+        </XButton>
+        <XButton :link="true">注册新用户</XButton>
     </div>
 </template>
 
@@ -37,4 +39,7 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
+.margin-top-10 {
+    margin-top: 10px;
+}
 </style>

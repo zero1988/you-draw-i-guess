@@ -3,11 +3,11 @@ import { defineComponent, onMounted, PropType, ref } from 'vue'
 const paintPanelProps = {
     width: {
         type: Number,
-        default: 0
+        default: 300
     },
     height: {
         type: Number,
-        default: 0
+        default: 300
     },
     move: Function as PropType<(e: MouseEvent, offsetX: number, offsetY: number) => void>,
     moveEnd: Function as PropType<(e: MouseEvent) => void>,
