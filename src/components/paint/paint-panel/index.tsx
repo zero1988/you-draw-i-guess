@@ -1,18 +1,33 @@
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, PropType, ref } from 'vue'
 
 const paintPanelProps = {
-
+    width: {
+        type: Number,
+        default: 0
+    },
+    height: {
+        type: Number,
+        default: 0
+    },
+    move: Function as PropType<(e: MouseEvent, offsetX: number, offsetY: number) => void>,
+    moveEnd: Function as PropType<(e: MouseEvent) => void>,
 }
 
 export default defineComponent({
     name: 'PaintPanel',
     props: paintPanelProps,
     setup(props) {
+        const canvasRef = ref(null)
+
+        onMounted((): void => {
+
+        })
+
         return {}
     },
     render() {
         return (
-            <div>PaintPanel</div>
+            <canvas ref='canvasRef' width={this.width} height={this.height}></canvas>
         )
     }
 })

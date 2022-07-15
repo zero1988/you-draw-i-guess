@@ -1,0 +1,10 @@
+.seat {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 50%;
+}
+
+.nobody {
+    background-color: gray;
+}

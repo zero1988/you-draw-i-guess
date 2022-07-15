@@ -1,20 +1,19 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Game from '@/views/Game.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         meta: {
-            title: '游戏页'
+            title: '登录'
         },
-        component: Game
+        component: () => import('@/views/Login.vue')
     },
     {
         path: '/game',
         meta: {
             title: '游戏页'
         },
-        component: Game
+        component: () => import('@/views/Game.vue')
     }
 ]
 
