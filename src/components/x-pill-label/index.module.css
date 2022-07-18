@@ -1,0 +1,30 @@
+.wrapper {
+    text-align: center;
+    position: relative;
+}
+
+.left,
+.right {
+    border: 2px solid #000;
+    position: absolute;
+    top: 0;
+}
+
+.left {
+    z-index: 2;
+    left: 0;
+}
+
+.right {
+    z-index: 1;
+}
+
+.green {
+    background-color: rgb(153, 224, 193);
+    color: #000;
+}
+
+.yellow {
+    background-color: rgb(250, 232, 122);
+    color: #000;
+}
