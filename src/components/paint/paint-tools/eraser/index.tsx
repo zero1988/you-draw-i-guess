@@ -17,7 +17,7 @@ export interface EraserData {
 
 export default defineComponent({
     name: 'Eraser',
-    setup() {
+    setup(props, { emit }) {
         const eraserDataRef = ref<ActionData<EraserData>>()
 
         const store = useStore()
@@ -62,8 +62,10 @@ export default defineComponent({
 
         function selectEraser() {
 
-            store.commit('paint/clearSelected')
+            // store.commit('paint/clearSelected')
             store.commit('paint/setCurrentTool', 'eraser')
+            console.log('emit setEraserPad')
+            emit('setEraserPad')
             store.commit('paint/setHandles', {
                 down,
                 move,

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper">
         <div class="title-wrapper">
             <div>房间号</div>
             <div>观众数量</div>
@@ -64,14 +64,17 @@ export default class Game extends Vue {
 </script>
 
 <style scoped>
+.wrapper {
+    padding: 20px;
+}
+
 .main-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 500px;
-    height: 500px;
     border: 2px solid #000;
     border-radius: 20px;
+    padding: 20px;
 }
 
 .main-wrapper .top {

@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 import { useCanvas, useCanvasColor, useCanvasSize, useCanvasCurrentTool } from '../../paint-utils'
 import { ActionData } from '@/store/modules/paint'
 import draw from './draw'
-const newId = require('uuid/v4')
+const newId = require('uuid').v4
 
 export interface BrushData {
     size: number
@@ -13,7 +13,7 @@ export interface BrushData {
 
 export default defineComponent({
     name: 'Brush',
-    setup() {
+    setup(props, { emit }) {
         const brushDataRef = ref<ActionData<BrushData>>()
 
         const store = useStore()
@@ -58,8 +58,10 @@ export default defineComponent({
         }
 
         function selectBrush() {
-            store.commit('paint/clearSelected')
+            // store.commit('paint/clearSelected')
             store.commit('paint/setCurrentTool', 'brush')
+            console.log('emit selectBrush')
+            emit('setBrushPad')
             store.commit('paint/setHandles', {
                 down,
                 move,

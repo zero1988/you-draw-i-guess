@@ -1,19 +1,19 @@
 export function useCanvas(store: any): CanvasRenderingContext2D {
-    return store.state.capture.canvas
+    return store.state.paint.canvas
 }
 
 export function useCanvasColor(store: any): string {
-    return store.state.capture.color
+    return store.state.paint.color
 }
 
 export function useCanvasSize(store: any): number {
-    return store.state.capture.size
+    return store.state.paint.size
 }
 
 export function useCanvasCurrentTool(store: any): string {
-    return store.state.capture.currentTool
+    return store.state.paint.currentTool
 }
 
 export function useCanvasHistory(store: any): { index: number, stack: any[] } {
-    return store.state.capture.history
+    return store.state.paint.history
 }

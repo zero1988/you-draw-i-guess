@@ -15,9 +15,13 @@ export interface History {
 
 
 export enum PaintTools {
-    None = 'none',
     Brush = 'brush',
     Eraser = 'eraser',
+}
+export enum PadTools {
+    None = 'none',
+    Size = 'size',
+    Color = 'color'
 }
 
 export type CanvasHandles = {
@@ -31,6 +35,7 @@ export interface PaintState {
     currentTool: PaintTools
     size: number
     color: string
+    pad: PadTools
     history: History
     handles: CanvasHandles
 }
@@ -39,7 +44,8 @@ const state: PaintState = {
     canvas: null,
     currentTool: PaintTools.Brush,
     size: 3,
-    color: '#ee5126',
+    color: '#000',
+    pad: PadTools.None,
     history: {
         index: 0,
         stack: []
@@ -71,12 +77,18 @@ const mutations: MutationTree<PaintState> = {
     setHandles(state: PaintState, handles: CanvasHandles) {
         state.handles = handles
     },
+    setSize(state: PaintState, size: number) {
+        state.size = size
+    },
     setColor(state: PaintState, color: string) {
         state.color = color
     },
     setCurrentTool(state: PaintState, tool: PaintTools) {
         state.currentTool = tool
     },
+    setPad(state: PaintState, pad: PadTools) {
+        state.pad = pad
+    }
 }
 
 export default {

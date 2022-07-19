@@ -1,4 +1,12 @@
-import { defineComponent, onMounted, PropType, ref } from 'vue'
+import { defineComponent, onMounted, PropType, ref, watchEffect, computed } from 'vue'
+import { useStore } from 'vuex'
+import { ActionData } from '@/store/modules/paint'
+import { useMouseDragDrop } from '../paint-utils/userMouseDragDrop'
+import PaintTools from '../paint-tools'
+import ColorPad from '../paint-color-pad'
+import SizePad from '../paint-size-pad'
+import styles from './index.module.css'
+
 
 const paintPanelProps = {
     width: {
@@ -9,25 +17,68 @@ const paintPanelProps = {
         type: Number,
         default: 300
     },
-    move: Function as PropType<(e: MouseEvent, offsetX: number, offsetY: number) => void>,
-    moveEnd: Function as PropType<(e: MouseEvent) => void>,
 }
 
 export default defineComponent({
     name: 'PaintPanel',
+    components: {
+        PaintTools,
+        ColorPad,
+        SizePad
+    },
     props: paintPanelProps,
     setup(props) {
         const canvasRef = ref(null)
+        const store = useStore()
+        const historyRef = ref(store.state.paint.history)
+
+        const padRef = ref('')
 
         onMounted((): void => {
-
+            if (canvasRef.value) {
+                store.commit('paint/setCanvas', (canvasRef.value as HTMLCanvasElement).getContext('2d'))
+            }
+            useMouseDragDrop(canvasRef.value as any, canvasDown, canvasMove, canvasUp)
         })
 
-        return {}
+        watchEffect((): void => {
+            historyRef.value.stack.forEach((action: ActionData<any>, index: number) => {
+                action.draw((canvasRef.value as any).getContext('2d'), action)
+            })
+        })
+
+        function canvasDown(e: MouseEvent) {
+            store.state.paint.handles.down?.(e)
+        }
+
+        function canvasMove(e: MouseEvent, offsetX: number, offsetY: number): void {
+            store.state.paint.handles.move?.(e, offsetX, offsetY)
+
+        }
+
+        function canvasUp(e: MouseEvent) {
+            store.state.paint.handles.up?.(e)
+        }
+
+        function setPad(p: string) {
+            console.log('xxxxx')
+            padRef.value = p
+        }
+
+        return {
+            canvasRef,
+            padRef,
+            setPad
+        }
     },
     render() {
         return (
-            <canvas ref='canvasRef' width={this.width} height={this.height}></canvas>
+            <div>
+                <canvas class={styles.canvas} ref='canvasRef' width={this.width} height={this.height}></canvas>
+                <PaintTools onSet-pad={this.setPad}></PaintTools>
+                <SizePad v-show={this.padRef === 'brush' || this.padRef === 'eraser'}></SizePad>
+                <ColorPad v-show={this.padRef === 'color'}></ColorPad>
+            </div >
         )
     }
 })
