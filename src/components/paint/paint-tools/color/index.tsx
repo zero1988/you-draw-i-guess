@@ -1,23 +1,23 @@
-import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, PropType } from 'vue'
+
 
 export default defineComponent({
     name: 'Color',
+    emits: ['colorClick'],
     setup(props, { emit }) {
 
-        function setPad() {
-            console.log('emit setPad color')
-            emit('abc')
+        function openColorPad() {
+            emit('colorClick')
         }
 
         return {
-            setPad,
+            openColorPad,
         }
     },
 
     render() {
         return (
-            <div onClick={this.setPad}>颜色</div>
+            <div onClick={this.openColorPad}>颜色</div>
         )
     }
 })

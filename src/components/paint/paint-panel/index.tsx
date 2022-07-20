@@ -60,23 +60,23 @@ export default defineComponent({
             store.state.paint.handles.up?.(e)
         }
 
-        function setPad(p: string) {
-            console.log('xxxxx')
+        function togglePad(p: string) {
             padRef.value = p
         }
 
         return {
             canvasRef,
             padRef,
-            setPad
+            togglePad
         }
     },
     render() {
         return (
             <div>
                 <canvas class={styles.canvas} ref='canvasRef' width={this.width} height={this.height}></canvas>
-                <PaintTools onSet-pad={this.setPad}></PaintTools>
-                <SizePad v-show={this.padRef === 'brush' || this.padRef === 'eraser'}></SizePad>
+                <PaintTools onTogglePad={this.togglePad}></PaintTools>
+                <SizePad v-show={this.padRef === 'brush'} mode="solid"></SizePad>
+                <SizePad v-show={this.padRef === 'eraser'} mode="hollow"></SizePad>
                 <ColorPad v-show={this.padRef === 'color'}></ColorPad>
             </div >
         )

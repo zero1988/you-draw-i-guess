@@ -20,20 +20,33 @@ const paintToolsProps = {
 export default defineComponent({
     name: 'PaintTools',
     props: paintToolsProps,
+    emits: ['togglePad'],
     setup(props, { emit }) {
-        function setPad(p: string) {
-            emit('setPad', p)
+
+        function onColorClick() {
+            emit('togglePad', 'color')
         }
+
+        function onBrushClick() {
+            emit('togglePad', 'brush')
+        }
+
+        function onEraserClick() {
+            emit('togglePad', 'eraser')
+        }
+
         return {
-            setPad
+            onColorClick,
+            onBrushClick,
+            onEraserClick
         }
     },
     render() {
         return (
             <div class={styles.wrapper}>
-                <Brush onSet-brush-pad={this.setPad('brush')}></Brush>
-                <Color on-Abc={this.setPad('color')}></Color>
-                <Eraser onSet-eraser-pad={this.setPad('eraser')}></Eraser>
+                <Brush onBrushClick={this.onBrushClick}></Brush>
+                <Color onColorClick={this.onColorClick}></Color>
+                <Eraser onEraserClick={this.onEraserClick}></Eraser>
                 <Undo></Undo>
                 <Redo></Redo>
             </div >

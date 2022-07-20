@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useCanvas, useCanvasSize, useCanvasCurrentTool } from '../../paint-utils'
+import { useCanvas, useCanvasEraserSize, useCanvasCurrentTool } from '../../paint-utils'
 import { ActionData } from '@/store/modules/paint'
 import draw from './draw'
 const newId = require('uuid').v4
@@ -17,6 +17,7 @@ export interface EraserData {
 
 export default defineComponent({
     name: 'Eraser',
+    emits: ['eraserClick'],
     setup(props, { emit }) {
         const eraserDataRef = ref<ActionData<EraserData>>()
 
@@ -24,7 +25,7 @@ export default defineComponent({
 
         const checked = computed(() => useCanvasCurrentTool(store) === 'mosaic')
         const canvasRef = computed(() => useCanvas(store))
-        const sizeRef = computed(() => useCanvasSize(store))
+        const sizeRef = computed(() => useCanvasEraserSize(store))
 
         function down(e: MouseEvent): void {
             const { left, top } = canvasRef.value.canvas.getBoundingClientRect()
@@ -35,7 +36,7 @@ export default defineComponent({
                 id: newId(),
                 name: 'eraser',
                 data: {
-                    size: sizeRef.value * 5,
+                    size: sizeRef.value * 2,
                     tiles: [{
                         x,
                         y,
@@ -64,8 +65,7 @@ export default defineComponent({
 
             // store.commit('paint/clearSelected')
             store.commit('paint/setCurrentTool', 'eraser')
-            console.log('emit setEraserPad')
-            emit('setEraserPad')
+            emit('eraserClick')
             store.commit('paint/setHandles', {
                 down,
                 move,

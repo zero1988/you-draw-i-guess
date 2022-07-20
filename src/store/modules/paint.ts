@@ -34,6 +34,7 @@ export interface PaintState {
     canvas: CanvasRenderingContext2D | null
     currentTool: PaintTools
     size: number
+    eraserSize: number
     color: string
     pad: PadTools
     history: History
@@ -44,6 +45,7 @@ const state: PaintState = {
     canvas: null,
     currentTool: PaintTools.Brush,
     size: 3,
+    eraserSize: 3,
     color: '#000',
     pad: PadTools.None,
     history: {
@@ -79,6 +81,9 @@ const mutations: MutationTree<PaintState> = {
     },
     setSize(state: PaintState, size: number) {
         state.size = size
+    },
+    setEraserSize(state: PaintState, size: number) {
+        state.eraserSize = size
     },
     setColor(state: PaintState, color: string) {
         state.color = color

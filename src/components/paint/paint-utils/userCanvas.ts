@@ -10,6 +10,10 @@ export function useCanvasSize(store: any): number {
     return store.state.paint.size
 }
 
+export function useCanvasEraserSize(store: any): number {
+    return store.state.paint.eraserSize
+}
+
 export function useCanvasCurrentTool(store: any): string {
     return store.state.paint.currentTool
 }

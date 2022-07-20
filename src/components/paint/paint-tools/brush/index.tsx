@@ -13,6 +13,7 @@ export interface BrushData {
 
 export default defineComponent({
     name: 'Brush',
+    emits: ['brushClick'],
     setup(props, { emit }) {
         const brushDataRef = ref<ActionData<BrushData>>()
 
@@ -60,8 +61,7 @@ export default defineComponent({
         function selectBrush() {
             // store.commit('paint/clearSelected')
             store.commit('paint/setCurrentTool', 'brush')
-            console.log('emit selectBrush')
-            emit('setBrushPad')
+            emit('brushClick')
             store.commit('paint/setHandles', {
                 down,
                 move,
