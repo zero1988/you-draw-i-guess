@@ -1,6 +1,7 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useCanvasHistory } from '../../paint-utils'
+import styles from '../index.module.css'
 
 export default defineComponent({
     name: 'Undo',
@@ -21,7 +22,7 @@ export default defineComponent({
 
     render() {
         return (
-            <div onClick={this.undo}>撤销</div>
+            <div class={[`game icon-undo`, this.stackCountRef === 0 ? styles.disable : null]} onClick={this.undo}></div>
         )
     }
 })

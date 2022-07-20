@@ -17,6 +17,7 @@ export interface History {
 export enum PaintTools {
     Brush = 'brush',
     Eraser = 'eraser',
+    Color = 'color',
 }
 export enum PadTools {
     None = 'none',

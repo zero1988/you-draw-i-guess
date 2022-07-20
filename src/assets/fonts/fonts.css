@@ -1,0 +1,64 @@
+@font-face {
+  font-family: 'game';
+  src: url('./fonts.eot?z47h17');
+  src: url('./fonts.eot?z47h17#iefix') format('embedded-opentype'),
+    url('./fonts.ttf?z47h17') format('truetype'),
+    url('./fonts.woff?z47h17') format('woff'),
+    url('./fonts.svg?z47h17#im') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+
+[class^="icon-"],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'game' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-eye:before {
+  content: "\e609";
+}
+
+.icon-refresh:before {
+  content: "\e6ad";
+}
+
+.icon-fill:before {
+  content: "\e63d";
+}
+
+.icon-pen:before {
+  content: "\e7d1";
+}
+
+.icon-clock:before {
+  content: "\e6e8";
+}
+
+.icon-redo:before {
+  content: "\e627";
+}
+
+.icon-undo:before {
+  content: "\e612";
+}
+
+.icon-eraser:before {
+  content: "\e641";
+}
+
+.icon-palette:before {
+  content: "\e72f";
+}

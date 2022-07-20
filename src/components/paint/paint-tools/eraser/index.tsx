@@ -23,7 +23,7 @@ export default defineComponent({
 
         const store = useStore()
 
-        const checked = computed(() => useCanvasCurrentTool(store) === 'mosaic')
+        const checked = computed(() => useCanvasCurrentTool(store) === 'eraser')
         const canvasRef = computed(() => useCanvas(store))
         const sizeRef = computed(() => useCanvasEraserSize(store))
 
@@ -81,7 +81,7 @@ export default defineComponent({
 
     render() {
         return (
-            <div onClick={this.selectEraser}>橡皮</div>
+            <div class="game icon-eraser" {...{ checked: `${this.checked}` }} onClick={this.selectEraser}></div>
         )
     }
 })

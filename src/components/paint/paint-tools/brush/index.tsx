@@ -76,7 +76,7 @@ export default defineComponent({
     },
     render() {
         return (
-            <div onClick={this.selectBrush}>画笔</div>
+            <div class="game icon-pen" {...{ checked: `${this.checked}` }} onClick={this.selectBrush}></div>
         )
     }
 })

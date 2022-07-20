@@ -21,7 +21,7 @@ export default defineComponent({
 
     render() {
         return (
-            <div onClick={this.redo}>恢复</div>
+            <div class={[`game icon-redo`]} onClick={this.redo}></div>
         )
     }
 })

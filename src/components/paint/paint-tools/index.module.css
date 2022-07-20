@@ -1,10 +1,28 @@
 .wrapper {
-    height: 40px;
     display: flex;
-    line-height: 40px;
+    height: 40px;
+
     cursor: pointer;
 }
 
 .wrapper div {
     flex: 1;
+    user-select: none;
+    color: rgba(0, 0, 0, 0.4);
+    line-height: 40px;
+    font-size: 24px;
+}
+
+.wrapper div[checked="true"] {
+    color: #000;
+}
+
+.wrapper div:active {
+    color: #000;
+}
+
+
+.disable {
+    opacity: 0.5;
+    pointer-events: none;
 }
