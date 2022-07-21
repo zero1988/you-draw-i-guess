@@ -17,15 +17,24 @@ const inputProps = {
     placeholder: {
         type: String,
         default: ''
-    }
+    },
+    modelValue: {
+        type: String,
+        default: ''
+    },
 }
 
 
 export default defineComponent({
     name: 'XInput',
     props: inputProps,
-    setup() {
-
+    setup(props, { emit }) {
+        function input(event: any) {
+            emit('update:modelValue', event.target.value)
+        }
+        return {
+            input
+        }
     },
     render() {
         return (
@@ -34,7 +43,7 @@ export default defineComponent({
                     width: `${this.$props.width}px`,
                     height: `${this.$props.height}px`
                 }}>
-                <input type={this.$props.type} placeholder={this.$props.placeholder} />
+                <input type={this.$props.type} placeholder={this.$props.placeholder} value={this.$props.modelValue} onInput={this.input} />
             </div>
         )
     }

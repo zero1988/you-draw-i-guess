@@ -40,6 +40,7 @@ export default defineComponent({
                 draw,
             }
             store.commit('paint/push', brushDataRef.value)
+            store.commit('websocket/push', brushDataRef.value)
         }
 
         function move(e: MouseEvent, offsetX: number, offsetY: number) {
