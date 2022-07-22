@@ -1,4 +1,29 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.canvas-wrapper {
+    flex: 1;
+}
+
 .canvas {
     background-color: #fff;
     border-radius: 8px;
+    touch-action: none;
+    width: 100%;
+    height: 100%;
+}
+
+.pad {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: -10px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: rgb(195, 225, 235);
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
+    touch-action: none;
+    z-index: 999;
 }

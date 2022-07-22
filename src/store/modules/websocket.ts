@@ -1,8 +1,14 @@
 import { MutationTree, ActionTree } from 'vuex'
 import main from '@/main'
 
-export interface Message {
+export interface WsMessage {
     event: string
+    data: any
+    sequence: number
+}
+
+export interface WsAction {
+    action: string
     data: any
     sequence: number
 }
@@ -49,7 +55,7 @@ const mutations: MutationTree<WebSocketState> = {
         console.error(state, event);
     },
     // 收到服务端发送的消息
-    SOCKET_ONMESSAGE(state, message: Message) {
+    SOCKET_ONMESSAGE(state, message: WsMessage) {
         // state.socket.message = message
     },
     // 自动重连
@@ -60,11 +66,6 @@ const mutations: MutationTree<WebSocketState> = {
     SOCKET_RECONNECT_ERROR(state) {
         state.socket.reconnectError = true;
     },
-
-    addSequence(state: WebSocketState) {
-        state.sequence++
-    }
-
 }
 
 const actions: ActionTree<WebSocketState, any> = {
@@ -80,26 +81,34 @@ const actions: ActionTree<WebSocketState, any> = {
         commit('SOCKET_ONERROR', event)
     },
     // 收到服务端发送的消息
-    async SOCKET_ONMESSAGE({ state, commit }, message) {
-        message = JSON.parse(message.data) as Message
+    async SOCKET_ONMESSAGE({ state, rootState, commit }, message) {
+        message = JSON.parse(message.data) as WsMessage
         console.log(message)
         commit('SOCKET_ONMESSAGE', message)
         switch (message.event) {
             case 'hello':
-                state.socket.isConnected && main.config.globalProperties.$socket.send(JSON.stringify({
+                sendMessage(state, {
                     action: 'join_game',
-                    sequence: state.sequence,
+                    sequence: state.sequence++,
                     data: JSON.stringify({
-                        userId: 'C1034'
+                        gameId: rootState.game.gameId,
                     })
-                }))
-                commit('addSequence')
+                })
                 break
             case 'join_game':
                 commit('game/setGame', message.data, { root: true })
                 break
-            case 'paint_data':
+            case 'push_paint_data':
                 commit('paint/push', message.data, { root: true })
+                break
+            case 'update_paint_data':
+                commit('paint/update', message.data, { root: true })
+                break
+            case 'undo_paint_data':
+                commit('paint/undo', { root: true })
+                break
+            case 'redo_paint_data':
+                commit('paint/redo', { root: true })
                 break
         }
 
@@ -112,10 +121,52 @@ const actions: ActionTree<WebSocketState, any> = {
     async SOCKET_RECONNECT_ERROR({ commit }) {
         commit('SOCKET_RECONNECT_ERROR')
     },
-    async Push({ commit }, data: any) {
-
+    async pushPaint({ state, rootState }, data: any) {
+        sendMessage(state, {
+            action: 'push_paint_data',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+                data: data
+            })
+        })
+    },
+    async updatePaint({ state, rootState }, data: any) {
+        sendMessage(state, {
+            action: 'update_paint_data',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+                data: data
+            })
+        })
+    },
+    async undoPaint({ state, rootState }) {
+        sendMessage(state, {
+            action: 'undo_paint_data',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+            })
+        })
+    },
+    async redoPaint({ state, rootState }) {
+        sendMessage(state, {
+            action: 'redo_paint_data',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+            })
+        })
     }
+}
 
+const sendMessage = (state: WebSocketState, action: WsAction) => {
+    state.socket.isConnected && main.config.globalProperties.$socket.send(JSON.stringify(action))
 }
 
 export default {

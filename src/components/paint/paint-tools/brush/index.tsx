@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useCanvas, useCanvasColor, useCanvasSize, useCanvasCurrentTool } from '../../paint-utils'
 import { ActionData } from '@/store/modules/paint'
@@ -24,6 +24,10 @@ export default defineComponent({
         const colorRef = computed(() => useCanvasColor(store))
         const sizeRef = computed(() => useCanvasSize(store))
 
+        onMounted(() => {
+            // selectBrush()
+        })
+
         function down(e: MouseEvent): void {
             const { left, top } = canvasRef.value.canvas.getBoundingClientRect()
             const x = e.clientX - left
@@ -40,7 +44,7 @@ export default defineComponent({
                 draw,
             }
             store.commit('paint/push', brushDataRef.value)
-            store.commit('websocket/push', brushDataRef.value)
+            store.dispatch('websocket/pushPaint', brushDataRef.value)
         }
 
         function move(e: MouseEvent, offsetX: number, offsetY: number) {
@@ -56,6 +60,8 @@ export default defineComponent({
                 brushDataRef.value.data.points.push(point)
 
                 store.commit('paint/update', brushDataRef.value)
+                store.dispatch('websocket/updatePaint', brushDataRef.value)
+
             }
         }
 

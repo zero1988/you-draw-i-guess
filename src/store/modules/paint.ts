@@ -1,3 +1,4 @@
+import { stat } from 'fs'
 import { MutationTree } from 'vuex'
 
 
@@ -38,7 +39,8 @@ export interface PaintState {
     eraserSize: number
     color: string
     pad: PadTools
-    history: History
+    stack: ActionData<any>[]  // 元素栈
+    undoStack: ActionData<any>[] // 
     handles: CanvasHandles
 }
 
@@ -46,13 +48,11 @@ const state: PaintState = {
     canvas: null,
     currentTool: PaintTools.Brush,
     size: 3,
-    eraserSize: 3,
+    eraserSize: 6,
     color: '#000',
     pad: PadTools.None,
-    history: {
-        index: 0,
-        stack: []
-    },
+    stack: [],
+    undoStack: [],
     handles: {} as CanvasHandles
 }
 
@@ -61,21 +61,23 @@ const mutations: MutationTree<PaintState> = {
         state.canvas = canvas
     },
     push(state: PaintState, action: ActionData<any>) {
-        state.history.index++
-        state.history.stack.push(action)
+        state.stack.push(action)
     },
     update(state: PaintState, action: ActionData<any>) {
-        const index = state.history.stack.findIndex(item => item.id === action.id)
+        const index = state.stack.findIndex(item => item.id === action.id)
         if (index > -1) {
-            state.history.stack[index] = action
+            state.stack[index] = action
         }
     },
-    pop(state: PaintState): ActionData<any> | undefined | null {
-        state.history.index > 0 && state.history.index--
-        return state.history.stack.pop()
+    undo(state: PaintState) {
+        state.stack.length > 0 && state.undoStack.push(state.stack.pop()!)
+    },
+    redo(state: PaintState) {
+        state.undoStack.length > 0 && state.stack.push(state.undoStack.pop()!)
     },
     clear(state: PaintState) {
-        return state.history.stack = []
+        state.stack = []
+        state.undoStack = []
     },
     setHandles(state: PaintState, handles: CanvasHandles) {
         state.handles = handles

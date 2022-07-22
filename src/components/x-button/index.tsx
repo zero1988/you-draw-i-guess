@@ -11,12 +11,12 @@ const buttonProps = {
         default: 'green'
     },
     width: {
-        type: Number,
-        default: 300,
+        type: String,
+        default: '300px',
     },
     height: {
-        type: Number,
-        default: 30,
+        type: String,
+        default: '30px',
     }
 }
 
@@ -31,9 +31,9 @@ export default defineComponent({
             <div class={`${this.$props.link ? styles.link : styles.button} ${this.$props.link ? '' : styles[this.$props.color]
                 }`}
                 style={{
-                    width: `${this.$props.width}px`,
-                    height: `${this.$props.height}px`,
-                    lineHeight: `${this.$props.height}px`
+                    width: `${this.$props.width}`,
+                    height: `${this.$props.height}`,
+                    lineHeight: `${this.$props.height}`
                 }}>
                 {this.$slots.default?.()}
             </div>

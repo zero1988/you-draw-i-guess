@@ -7,12 +7,12 @@ const popupProps = {
         default: 'transparent'
     },
     width: {
-        type: Number,
-        default: 0
+        type: String,
+        default: '300px'
     },
     height: {
-        type: Number,
-        default: 0
+        type: String,
+        default: '300px'
     },
 }
 
@@ -26,7 +26,7 @@ export default defineComponent({
     render() {
         return (
             <div class={styles.mask} style={{ backgroundColor: this.$props.maskBgColor }}>
-                <div style={{ width: `${this.$props.width}px`, height: `${this.$props.height}px` }}>
+                <div style={{ width: `${this.$props.width}`, height: `${this.$props.height}` }}>
                     <slot name="content"></slot>
                 </div>
             </div>

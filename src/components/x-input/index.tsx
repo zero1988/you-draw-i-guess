@@ -3,12 +3,12 @@ import styles from './index.module.css'
 
 const inputProps = {
     width: {
-        type: Number,
-        default: 300
+        type: String,
+        default: '300px'
     },
     height: {
-        type: Number,
-        default: 30
+        type: String,
+        default: '30px'
     },
     type: {
         type: String as PropType<'text' | 'password'>,
@@ -40,8 +40,8 @@ export default defineComponent({
         return (
             <div class={styles.wrapper}
                 style={{
-                    width: `${this.$props.width}px`,
-                    height: `${this.$props.height}px`
+                    width: `${this.$props.width}`,
+                    height: `${this.$props.height}`
                 }}>
                 <input type={this.$props.type} placeholder={this.$props.placeholder} value={this.$props.modelValue} onInput={this.input} />
             </div>

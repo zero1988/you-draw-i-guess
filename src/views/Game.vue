@@ -6,28 +6,34 @@
             <div>换房间</div>
         </div>
         <div class="main-wrapper">
-            <div class="top">
-                <XPillLabel :width="200" :height="20" :leftWidth="60">
-                    <template v-slot:left>
-                        23
-                    </template>
-                    <template v-slot:right>
-                        三个字 家电
-                    </template>
-                </XPillLabel>
-            </div>
-            <div class="content">
-                <PaintPanel :width="450" :height="450"></PaintPanel>
-                <ReadyPanel v-if="false"></ReadyPanel>
+            <div>
+                <div class="top">
+                    <XPillLabel :width="200" :height="20" :leftWidth="60">
+                        <template v-slot:left>
+                            23
+                        </template>
+                        <template v-slot:right>
+                            三个字 家电
+                        </template>
+                    </XPillLabel>
+                </div>
+                <div class="content">
+                    <PaintPanel class="flex1"></PaintPanel>
+                    <ReadyPanel v-if="false"></ReadyPanel>
+                </div>
             </div>
         </div>
         <div class="seat-wrapper">
-            <Seat v-for="(index) in 5" :key="index"></Seat>
+            <Seat v-for="(index) in 5" :key="index" class="flex1"></Seat>
         </div>
         <div class="message-wrapper">
-            <Message v-for="(index) in 15" :key="index"></Message>
+            <div>
+                <Message v-for="(index) in 15" :key="index"></Message>
+            </div>
         </div>
-        <sendBox></sendBox>
+        <div class="send-wrapper">
+            <sendBox></sendBox>
+        </div>
         <Popup v-if="show"></Popup>
     </div>
 </template>
@@ -65,24 +71,65 @@ export default class Game extends Vue {
 
 <style scoped>
 .wrapper {
-    padding: 20px;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.title-wrapper {
+    height: 60px;
 }
 
 .main-wrapper {
+    flex: 1;
+    padding: 10px 10px;
+    border: 2px solid #000;
+    border-radius: 20px;
+}
+
+.main-wrapper>div {
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 2px solid #000;
-    border-radius: 20px;
-    padding: 20px;
+
 }
 
 .main-wrapper .top {
-    flex: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     margin-left: 20px;
 }
 
-.main-wrapper .content {}
+.main-wrapper .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.seat-wrapper {
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-wrapper {
+    height: 100px;
+}
+
+.message-wrapper>div {
+    overflow: auto;
+}
+
+.send-wrapper {
+    margin-top: 10px;
+    height: 60px;
+}
 </style>

@@ -9,14 +9,7 @@ import styles from './index.module.css'
 
 
 const paintPanelProps = {
-    width: {
-        type: Number,
-        default: 300
-    },
-    height: {
-        type: Number,
-        default: 300
-    },
+
 }
 
 export default defineComponent({
@@ -30,24 +23,34 @@ export default defineComponent({
     setup(props) {
         const canvasRef = ref(null)
         const store = useStore()
-        const historyRef = ref(store.state.paint.history)
+        const stackRef = ref(store.state.paint.stack)
 
         const padRef = ref('')
 
         onMounted((): void => {
             if (canvasRef.value) {
+
+                const canvas = (canvasRef.value as HTMLCanvasElement)
+                const rect = canvas.getBoundingClientRect()
+                canvas.style.width = `${rect.width}px`
+                canvas.style.height = `${rect.height}px`
+                canvas.width = rect.width
+                canvas.height = rect.height
+
                 store.commit('paint/setCanvas', (canvasRef.value as HTMLCanvasElement).getContext('2d'))
             }
             useMouseDragDrop(canvasRef.value as any, canvasDown, canvasMove, canvasUp)
         })
 
         watchEffect((): void => {
-            historyRef.value.stack.forEach((action: ActionData<any>, index: number) => {
+            stackRef.value.forEach((action: ActionData<any>) => {
                 action.draw((canvasRef.value as any).getContext('2d'), action)
             })
         })
 
         function canvasDown(e: MouseEvent) {
+            padRef.value = ''
+
             store.state.paint.handles.down?.(e)
         }
 
@@ -72,12 +75,14 @@ export default defineComponent({
     },
     render() {
         return (
-            <div>
-                <canvas class={styles.canvas} ref='canvasRef' width={this.width} height={this.height}></canvas>
+            <div class={styles.wrapper}>
+                <div class={styles['canvas-wrapper']}>
+                    <canvas class={styles.canvas} ref='canvasRef' ></canvas>
+                </div>
                 <PaintTools onTogglePad={this.togglePad}></PaintTools>
-                <SizePad v-show={this.padRef === 'brush'} mode="solid"></SizePad>
-                <SizePad v-show={this.padRef === 'eraser'} mode="hollow"></SizePad>
-                <ColorPad v-show={this.padRef === 'color'}></ColorPad>
+                <SizePad class={styles.pad} v-show={this.padRef === 'brush'} mode="solid"></SizePad>
+                <SizePad class={styles.pad} v-show={this.padRef === 'eraser'} mode="hollow"></SizePad>
+                <ColorPad class={styles.pad} v-show={this.padRef === 'color'}></ColorPad>
             </div >
         )
     }

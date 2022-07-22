@@ -18,6 +18,11 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 html,
@@ -25,5 +30,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: rgb(195, 225, 235);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 </style>

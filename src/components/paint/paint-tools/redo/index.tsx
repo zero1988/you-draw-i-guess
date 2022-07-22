@@ -1,27 +1,29 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useCanvasHistory } from '../../paint-utils'
+import { useCanvasUndoStack } from '../../paint-utils'
+import styles from '../index.module.css'
 
 export default defineComponent({
     name: 'Redo',
     setup() {
 
         const store = useStore()
-        const stackCountRef = computed(() => useCanvasHistory(store).stack.length)
+        const undoStackCountRef = computed(() => useCanvasUndoStack(store).length)
 
         function redo() {
-            store.commit('paint/pop')
+            store.commit('paint/redo')
+            store.dispatch('websocket/redoPaint')
         }
 
         return {
             redo,
-            stackCountRef
+            undoStackCountRef
         }
     },
 
     render() {
         return (
-            <div class={[`game icon-redo`]} onClick={this.redo}></div>
+            <div class={[`game icon-redo`, this.undoStackCountRef === 0 ? styles.disable : '']} onClick={this.redo}></div>
         )
     }
 })

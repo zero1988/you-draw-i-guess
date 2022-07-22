@@ -19,7 +19,7 @@ export default defineComponent({
         return (
             <div class={styles.wrapper}>
                 <xInput></xInput>
-                <XButton text="发送"></XButton>
+                <XButton>发送</XButton>
             </div>
         )
     }

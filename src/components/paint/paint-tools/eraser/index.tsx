@@ -45,6 +45,7 @@ export default defineComponent({
                 draw,
             }
             store.commit('paint/push', eraserDataRef.value)
+            store.dispatch('websocket/pushPaint', eraserDataRef.value)
         }
 
         function move(e: MouseEvent, offsetX: number, offsetY: number) {
@@ -58,6 +59,7 @@ export default defineComponent({
                     y: top.y + offsetY,
                 })
                 store.commit('paint/update', eraserDataRef.value)
+                store.dispatch('websocket/updatePaint', eraserDataRef.value)
             }
         }
 

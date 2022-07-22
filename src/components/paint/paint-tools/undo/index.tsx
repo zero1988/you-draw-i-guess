@@ -1,6 +1,6 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useCanvasHistory } from '../../paint-utils'
+import { useCanvasStack } from '../../paint-utils'
 import styles from '../index.module.css'
 
 export default defineComponent({
@@ -8,10 +8,11 @@ export default defineComponent({
     setup() {
 
         const store = useStore()
-        const stackCountRef = computed(() => useCanvasHistory(store).stack.length)
+        const stackCountRef = computed(() => useCanvasStack(store).length)
 
         function undo() {
-            store.commit('paint/pop')
+            store.commit('paint/undo')
+            store.dispatch('websocket/undoPaint')
         }
 
         return {
@@ -22,7 +23,7 @@ export default defineComponent({
 
     render() {
         return (
-            <div class={[`game icon-undo`, this.stackCountRef === 0 ? styles.disable : null]} onClick={this.undo}></div>
+            <div class={[`game icon-undo`, this.stackCountRef === 0 ? styles.disable : '']} onClick={this.undo}></div>
         )
     }
 })

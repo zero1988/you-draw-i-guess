@@ -10,21 +10,21 @@ class Point {
 }
 
 export function useMouseDragDrop(el: HTMLElement,
-    down: ((e: MouseEvent) => void) | undefined | null,
-    move: ((e: MouseEvent, offsetX: number, offsetY: number) => void) | undefined | null,
-    up: ((e: MouseEvent) => void) | undefined | null) {
+    down: ((e: PointerEvent) => void) | undefined | null,
+    move: ((e: PointerEvent, offsetX: number, offsetY: number) => void) | undefined | null,
+    up: ((e: PointerEvent) => void) | undefined | null) {
     const startRef = ref(new Point())
     const downRef = ref()
     const dragRef = ref(false)  // 按住鼠标
 
-    el.addEventListener('mousedown', (e: MouseEvent) => {
+    el.addEventListener('pointerdown', (e: PointerEvent) => {
         startDragging()
         startRef.value = new Point(e.clientX, e.clientY)
         downRef.value = new Point(e.clientX, e.clientY)
         down?.(e)
     })
 
-    function handleMousemove(e: MouseEvent) {
+    function handleMousemove(e: PointerEvent) {
         if (dragRef.value) {
             const offsetX = e.clientX - startRef.value.x // 偏移x
             const offsetY = e.clientY - startRef.value.y // 偏移y
@@ -33,7 +33,7 @@ export function useMouseDragDrop(el: HTMLElement,
         }
     }
 
-    function handleMouseup(e: MouseEvent) {
+    function handleMouseup(e: PointerEvent) {
         stopDragging()
         up?.(e)
     }
@@ -41,16 +41,16 @@ export function useMouseDragDrop(el: HTMLElement,
     function startDragging() {
         if (!dragRef.value) {
             dragRef.value = true
-            document.addEventListener('mousemove', handleMousemove)
-            document.addEventListener('mouseup', handleMouseup)
+            document.addEventListener('pointermove', handleMousemove)
+            document.addEventListener('pointerup', handleMouseup)
         }
     }
 
     function stopDragging() {
         if (dragRef.value) {
             dragRef.value = false
-            document.removeEventListener('mousemove', handleMousemove)
-            document.removeEventListener('mouseup', handleMouseup)
+            document.removeEventListener('pointermove', handleMousemove)
+            document.removeEventListener('pointerup', handleMouseup)
         }
     }
 }

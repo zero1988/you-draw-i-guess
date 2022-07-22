@@ -18,6 +18,10 @@ export function useCanvasCurrentTool(store: any): string {
     return store.state.paint.currentTool
 }
 
-export function useCanvasHistory(store: any): { index: number, stack: any[] } {
-    return store.state.paint.history
+export function useCanvasStack(store: any): any[] {
+    return store.state.paint.stack
+}
+
+export function useCanvasUndoStack(store: any): any[] {
+    return store.state.paint.undoStack
 }

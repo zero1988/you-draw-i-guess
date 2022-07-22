@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import { useStore } from 'vuex'
 
 const sizes = [3, 6, 9, 12, 15]
+const eraserSizes = [6, 9, 12, 15]
 
 const sizeProps = {
     mode: {
@@ -31,26 +32,39 @@ export default defineComponent({
             }
         }
 
+        function clear() {
+            store.commit('paint/clear')
+        }
+
         return {
             size,
             eraserSize,
-            selectSize
+            selectSize,
+            clear
         }
     },
     render() {
         return (
             <div class={styles.wrapper}>
-                {sizes.map(size => {
-                    return (
-                        <div class={styles['point-wrapper']} {...{ data: size }} onClick={this.selectSize}>
-                            {
-                                this.$props.mode === 'solid' ?
-                                    <div class={styles.solid} {...{ checked: this.size === size, data: size }} style={{ width: `${size * 2}px`, height: `${size * 2}px` }}></div> :
-                                    <div class={styles.hollow} {...{ checked: this.eraserSize === size, data: size }} style={{ width: `${size * 2}px`, height: `${size * 2}px` }}></div>
-                            }
-                        </div>
-                    )
-                })}
+                {
+                    this.$props.mode === 'solid' ? sizes.map((size) => {
+                        return (
+                            <div class={styles['point-wrapper']} {...{ data: size }} onClick={this.selectSize}>
+                                <div class={styles.solid} {...{ checked: this.size === size, data: size }} style={{ width: `${size * 2}px`, height: `${size * 2}px` }}></div>
+                            </div>
+                        )
+                    }) : eraserSizes.map((size) => {
+                        return (
+                            <div class={styles['point-wrapper']} {...{ data: size }} onClick={this.selectSize}>
+                                <div class={styles.hollow} {...{ checked: this.eraserSize === size, data: size }} style={{ width: `${size * 2}px`, height: `${size * 2}px` }}></div>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    this.$props.mode !== 'solid' ?
+                        <div class={styles['point-wrapper']} onClick={this.clear}>清空</div> : ''
+                }
             </div>
         )
 

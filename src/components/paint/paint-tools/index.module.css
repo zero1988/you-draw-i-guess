@@ -8,17 +8,17 @@
 .wrapper div {
     flex: 1;
     user-select: none;
-    color: rgba(0, 0, 0, 0.4);
+    color: #000;
     line-height: 40px;
     font-size: 24px;
 }
 
 .wrapper div[checked="true"] {
-    color: #000;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .wrapper div:active {
-    color: #000;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 

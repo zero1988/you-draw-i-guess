@@ -2,17 +2,17 @@ import { defineComponent } from 'vue'
 import styles from './index.module.css'
 
 const messageProps = {
-    portrait: {
+    avatarId: {
         type: String,
-        default: ''
+        default: '1'
     },
     sender: {
         type: String,
-        default: ''
+        default: '张三'
     },
     message: {
         type: String,
-        default: ''
+        default: '今天天气不错'
     }
 }
 
@@ -25,7 +25,7 @@ export default defineComponent({
     render() {
         return (
             <div>
-                <span class={styles.portrait} style={{ background: `url${this.$props.portrait}` }}></span>
+                <span class={styles.portrait} style={{ background: `url${this.$props.avatarId}` }}></span>
                 <span class={styles.sender}>{this.$props.sender}</span>
                 <span class={styles.message}>{this.$props.message}</span>
             </div >
