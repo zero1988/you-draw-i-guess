@@ -1,15 +1,14 @@
 @font-face {
   font-family: 'game';
-  src: url('./fonts.eot?z47h17');
-  src: url('./fonts.eot?z47h17#iefix') format('embedded-opentype'),
-    url('./fonts.ttf?z47h17') format('truetype'),
-    url('./fonts.woff?z47h17') format('woff'),
-    url('./fonts.svg?z47h17#im') format('svg');
+  src: url('./fonts.eot?jytl8t');
+  src: url('./fonts.eot?jytl8t#iefix') format('embedded-opentype'),
+    url('./fonts.ttf?jytl8t') format('truetype'),
+    url('./fonts.woff?jytl8t') format('woff'),
+    url('./fonts.svg?jytl8t#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
-
 
 [class^="icon-"],
 [class*=" icon-"] {
@@ -25,6 +24,10 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-clear:before {
+  content: "\e9ac";
 }
 
 .icon-eye:before {

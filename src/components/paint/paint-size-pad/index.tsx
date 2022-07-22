@@ -56,14 +56,14 @@ export default defineComponent({
                     }) : eraserSizes.map((size) => {
                         return (
                             <div class={styles['point-wrapper']} {...{ data: size }} onClick={this.selectSize}>
-                                <div class={styles.hollow} {...{ checked: this.eraserSize === size, data: size }} style={{ width: `${size * 2}px`, height: `${size * 2}px` }}></div>
+                                <div class={styles.hollow} {...{ checked: this.eraserSize === size, data: size }} style={{ width: `${size * 1}px`, height: `${size * 1}px` }}></div>
                             </div>
                         )
                     })
                 }
                 {
                     this.$props.mode !== 'solid' ?
-                        <div class={styles['point-wrapper']} onClick={this.clear}>清空</div> : ''
+                        <div class={[styles['point-wrapper'], `game icon-clear`]} style={{ fontSize: '24px' }} onClick={this.clear}></div> : ''
                 }
             </div>
         )

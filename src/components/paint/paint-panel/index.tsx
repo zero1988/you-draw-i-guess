@@ -43,10 +43,24 @@ export default defineComponent({
         })
 
         watchEffect((): void => {
-            stackRef.value.forEach((action: ActionData<any>) => {
+            if (stackRef.value.length === 0) {
+                clearRect()
+            }
+            stackRef.value.forEach((action: ActionData<any>, index: number) => {
+                if (index === 0) {
+                    clearRect()
+                }
                 action.draw((canvasRef.value as any).getContext('2d'), action)
             })
         })
+
+        function clearRect() {
+            if (canvasRef.value) {
+                const canvas = (canvasRef.value as HTMLCanvasElement)
+                const ctx = canvas.getContext('2d')
+                ctx?.clearRect(0, 0, canvas.width, canvas.height)
+            }
+        }
 
         function canvasDown(e: MouseEvent) {
             padRef.value = ''

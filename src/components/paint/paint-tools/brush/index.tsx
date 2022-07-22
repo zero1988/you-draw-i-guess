@@ -25,7 +25,11 @@ export default defineComponent({
         const sizeRef = computed(() => useCanvasSize(store))
 
         onMounted(() => {
-            // selectBrush()
+            store.commit('paint/setCurrentTool', 'brush')
+            store.commit('paint/setHandles', {
+                down,
+                move,
+            })
         })
 
         function down(e: MouseEvent): void {

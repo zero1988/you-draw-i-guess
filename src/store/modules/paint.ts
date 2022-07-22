@@ -76,8 +76,8 @@ const mutations: MutationTree<PaintState> = {
         state.undoStack.length > 0 && state.stack.push(state.undoStack.pop()!)
     },
     clear(state: PaintState) {
-        state.stack = []
-        state.undoStack = []
+        state.stack.splice(0, state.stack.length)
+        state.undoStack.splice(0, state.undoStack.length)
     },
     setHandles(state: PaintState, handles: CanvasHandles) {
         state.handles = handles
