@@ -4,15 +4,15 @@ import styles from './index.module.css'
 const messageProps = {
     avatarId: {
         type: Number,
-        default: 1
+        default: 0
     },
     sender: {
         type: String,
-        default: '张三'
+        default: ''
     },
     message: {
         type: String,
-        default: '今天天气不错'
+        default: ''
     }
 }
 
@@ -24,10 +24,12 @@ export default defineComponent({
     },
     render() {
         return (
-            <div>
-                <span class={styles.portrait} style={{ background: `url${this.$props.avatarId}` }}></span>
-                <span class={styles.sender}>{this.$props.sender}</span>
-                <span class={styles.message}>{this.$props.message}</span>
+            <div class={styles.wrapper}>
+                <div class={styles.avatar} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
+                <div class={styles['message-wrapper']}>
+                    <span class={styles.sender}>{this.$props.sender}: </span>
+                    <span class={styles.message}>{this.$props.message}</span>
+                </div>
             </div >
         )
     }

@@ -1,26 +1,34 @@
 <template>
     <div class="wrapper">
         <div class="title-wrapper">
-            <div>房间号</div>
-            <div>观众数量{{ audiences.length }}</div>
-            <div>换房间</div>
+            <div class="change-wrapper">
+                <div class="game icon-refresh" @click="changeGame"></div>
+            </div>
+            <div class="game-num">{{ gameId }}房</div>
+            <div class="avatar" :style="{ backgroundImage: avatar }">
+            </div>
+            <div class="watcher-wrapper">
+                <div class="icon-eye"></div>
+                <div class="watcher-number">{{ audiences.length }}</div>
+            </div>
+
         </div>
         <div class="main-wrapper">
             <div>
-                <div class="top">
-                    <XPillLabel :width="200" :height="20" :leftWidth="60">
+                <div class="top" v-if="isRunning && runningNumber > 0">
+                    <XPillLabel :width="300" :height="30" :leftWidth="80">
                         <template v-slot:left>
-                            23
+                            <span>{{ runningNumber }}</span>
                         </template>
                         <template v-slot:right>
-                            三个字 家电
+                            {{ tip1 }} {{ tip2 }}
                         </template>
                     </XPillLabel>
+                    <div class="drawer-wrapper">{{ drawer }}</div>
                 </div>
                 <div class="content">
                     <PaintPanel class="flex1" v-if="isRunning" :mode="mode"></PaintPanel>
-                    <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber">
-                    </ReadyPanel>
+                    <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber"></ReadyPanel>
                 </div>
             </div>
         </div>
@@ -30,11 +38,12 @@
         </div>
         <div class="message-wrapper">
             <div>
-                <Message v-for="(index) in 15" :key="index"></Message>
+                <Message v-for="(message, index) in messages" :key="index" :avatarId="message.avatarId"
+                    :message="message.message" :sender="message.userName"></Message>
             </div>
         </div>
         <div class="send-wrapper">
-            <sendBox></sendBox>
+            <sendBox @send="send"></sendBox>
         </div>
         <Popup v-if="show"></Popup>
     </div>
@@ -64,7 +73,7 @@ const websocketModule = namespace('websocket')
         Message,
         SendBox,
         Popup,
-        XPillLabel
+        XPillLabel,
     },
     computed: {
 
@@ -75,16 +84,22 @@ export default class Game extends Vue {
     show: boolean = false
 
 
-    @gameModule.State('gameId') gameId!: number
+    @gameModule.State('gameId') gameId!: string
     @gameModule.State('me') me!: any
     @gameModule.State('turn') turn!: number
-    @gameModule.State('players') players!: Array<User>
+    @gameModule.State('players') players!: Array<any>
     @gameModule.State('audiences') audiences!: Array<User>
     @gameModule.State('status') status!: GameStatus
     @gameModule.State('waitingNumber') waitingNumber!: number
+    @gameModule.State('runningNumber') runningNumber!: number
+    @gameModule.State('key') key!: string
+    @gameModule.State('tip1') tip1!: string
+    @gameModule.State('tip2') tip2!: string
+    @gameModule.State('messages') messages!: Array<any>
 
     @websocketModule.Action('addPlayer') addPlayer!: () => void
     @websocketModule.Action('addAudience') addAudience!: () => void
+    @websocketModule.Action('postMessage') postMessage!: (message: string) => void
 
     mounted() {
 
@@ -99,23 +114,47 @@ export default class Game extends Vue {
     get cPlayers() {
         const players = this.players.map((player: any) => {
             return {
-                userId: player.UserId,
-                userName: player.UserName,
-                avatarId: player.AvatarId
+                userId: player.userId,
+                userName: player.userName,
+                avatarId: player.avatarId
             } as User
         })
         const len = 5 - players.length
         for (let i = 0; i < len; i++) {
             players.push(new User())
         }
-        console.log(players)
         return players
     }
     get mode() {
         const index = this.players.findIndex((player: any) => {
-            return player.UserId === this.me.userId
+            return player.userId === this.me.userId
         })
         return index === this.turn ? 'draw' : 'guess'
+    }
+
+    get avatar() {
+        return `url(src/assets/avatars/${this.me.avatarId}.png)`
+    }
+
+    get drawer() {
+        if (this.status === GameStatus.Running) {
+            let uname = ''
+            this.players.forEach((player: any, index: number) => {
+                if (index === this.turn) {
+                    uname = player.userName
+                }
+            })
+            return `当前作者: ${uname}`
+        }
+        return ''
+    }
+
+    changeGame() {
+
+    }
+
+    send(message: string) {
+        this.postMessage(message)
     }
 
     toggleReady(ready: boolean) {
@@ -131,8 +170,64 @@ export default class Game extends Vue {
     flex-direction: column;
 }
 
+
 .title-wrapper {
-    height: 60px;
+    height: 30px;
+    padding: 10px 10px 0 10px;
+}
+
+.change-wrapper {
+    float: left;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid;
+    background-color: rgb(250, 232, 122);
+}
+
+.game-num {
+    float: left;
+    line-height: 35px;
+    padding-left: 5px;
+    font-weight: 600;
+}
+
+.watcher-wrapper {
+    float: right;
+    height: 30px;
+    border-radius: 30px;
+    border: 2px solid;
+    background-color: rgb(250, 232, 122);
+}
+
+.icon-refresh {
+    font-size: 24px;
+    line-height: 30px;
+}
+
+.icon-eye {
+    font-size: 24px;
+    line-height: 30px;
+    float: left;
+    padding-left: 5px;
+}
+
+.watcher-number {
+    line-height: 30px;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 0 10px 0 5px;
+}
+
+.avatar {
+    width: 33px;
+    height: 34px;
+    border-radius: 50%;
+    /* border: 1px solid; */
+    float: right;
+    margin-left: 10px;
+    background-size: contain;
 }
 
 .main-wrapper {
@@ -156,8 +251,17 @@ export default class Game extends Vue {
     height: 40px;
     display: flex;
     align-items: center;
-    margin-left: 20px;
+    margin-bottom: 10px;
 }
+
+.main-wrapper .drawer-wrapper {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 40px;
+    text-align: right;
+    flex: 1;
+}
+
 
 .main-wrapper .content {
     flex: 1;
@@ -179,9 +283,11 @@ export default class Game extends Vue {
 
 .message-wrapper {
     height: 100px;
+    padding: 0 10px;
 }
 
 .message-wrapper>div {
+    height: 100%;
     overflow: auto;
 }
 

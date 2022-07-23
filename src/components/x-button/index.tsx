@@ -17,7 +17,7 @@ const buttonProps = {
     },
     height: {
         type: String,
-        default: '30px',
+        default: '40px',
     }
 }
 

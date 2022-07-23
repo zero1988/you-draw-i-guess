@@ -8,7 +8,7 @@ const labelProps = {
     },
     height: {
         type: Number,
-        default: 30
+        default: 40
     },
     leftText: {
         type: String,
@@ -46,7 +46,7 @@ export default defineComponent({
                     width: `${this.$props.width}px`,
                     height: `${this.$props.height}px`,
                 }}>
-                <div class={`${styles.left} ${styles[this.$props.leftColor]}`}
+                <div class={`${styles.left} ${styles[this.$props.leftColor]} game icon-clock`}
                     style={{
                         borderRadius: `${this.$props.height}px`,
                         height: `${this.$props.height}px`,

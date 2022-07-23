@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import styles from './index.module.css'
 
 const badgeProps = {
@@ -11,16 +11,16 @@ const badgeProps = {
         default: ''
     },
     bgColor: {
-        type: String,
-        default: '#ff0000'
+        type: String as PropType<'red' | 'green' | 'yellow'>,
+        default: 'rgb(224, 117, 106)'
     },
     width: {
-        type: Number,
-        default: 0
+        type: String,
+        default: '40px'
     },
     height: {
-        type: Number,
-        default: 0
+        type: String,
+        default: '20px'
     }
 }
 
@@ -32,7 +32,8 @@ export default defineComponent({
     },
     render() {
         return (
-            <div class={styles.badge} style={{ color: this.$props.color, background: this.$props.bgColor }}>{this.$props.text}</div>
+            <div class={[styles.badge, styles[this.$props.bgColor]]}
+                style={{ color: this.$props.color, width: this.$props.width, height: this.$props.height, lineHeight: this.$props.height, }}>{this.$props.text}</div>
         )
     }
 })

@@ -1,5 +1,30 @@
-.portrait {}
+.wrapper {
+    display: flex;
+    text-align: left;
+    font-size: 14px;
+    height: 24px;
+    line-height: 24px;
+}
 
-.sender {}
+.avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-size: contain;
+    display: inline-block;
+    margin-right: 4px;
 
-.message {}
+}
+
+.message-wrapper {
+    flex: 1
+}
+
+.sender {
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.message {
+    line-height: 24px;
+}

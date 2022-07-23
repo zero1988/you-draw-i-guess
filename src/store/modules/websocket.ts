@@ -48,7 +48,6 @@ const mutations: MutationTree<WebSocketState> = {
     SOCKET_ONCLOSE(state, event) {
         state.socket.isConnected = false;
         console.log("连接已断开: " + new Date());
-        console.log(event);
     },
     // 发生错误
     SOCKET_ONERROR(state, event) {
@@ -83,7 +82,7 @@ const actions: ActionTree<WebSocketState, any> = {
     // 收到服务端发送的消息
     async SOCKET_ONMESSAGE({ state, rootState, commit }, message) {
         message = JSON.parse(message.data) as WsMessage
-        console.log(message)
+        // console.log(message)
         commit('SOCKET_ONMESSAGE', message)
         switch (message.event) {
             case 'hello':
@@ -96,7 +95,7 @@ const actions: ActionTree<WebSocketState, any> = {
                 })
                 break
             case 'join_game':
-                commit('game/setGame', message.data, { root: true })
+                commit('game/setGame', JSON.parse(message.data), { root: true })
                 sendMessage(state, {
                     action: 'add_audience',
                     sequence: state.sequence++,
@@ -122,16 +121,29 @@ const actions: ActionTree<WebSocketState, any> = {
                 commit('paint/clear', null, { root: true })
                 break
             case 'add_audience':
-                commit('game/setGame', message.data, { root: true })
+                commit('game/setGame', JSON.parse(message.data), { root: true })
                 break
             case 'add_player':
-                commit('game/setGame', message.data, { root: true })
+                commit('game/setGame', JSON.parse(message.data), { root: true })
                 break
             case 'waiting_count_down':
                 commit('game/setWaitingNumber', message.data.number, { root: true })
                 break
             case 'start_game':
-                commit('game/setGame', message.data, { root: true })
+                commit('paint/clear', null, { root: true })
+                commit('game/setGame', JSON.parse(message.data), { root: true })
+                break
+            case 'running_count_down':
+                commit('game/setRunningNumber', message.data.number, { root: true })
+                break
+            case 'pause_game':
+                commit('game/setGame', JSON.parse(message.data), { root: true })
+                break
+            case 'finish_game':
+                commit('game/setGame', JSON.parse(message.data), { root: true })
+                break
+            case 'post_message':
+                commit('game/pushMessage', JSON.parse(message.data), { root: true })
                 break
         }
 
@@ -213,6 +225,19 @@ const actions: ActionTree<WebSocketState, any> = {
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
                 userId: rootState.game.me.userId,
+            })
+        })
+    },
+    async postMessage({ state, rootState }, message: string) {
+        sendMessage(state, {
+            action: 'post_message',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+                userName: rootState.game.me.userName,
+                avatarId: rootState.game.me.avatarId,
+                message: message
             })
         })
     }

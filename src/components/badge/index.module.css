@@ -1,1 +1,13 @@
-.badge {}
+.badge {
+    border: 1px solid #000;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.red {
+    background-color: rgb(224, 117, 106);
+}
+
+.green {
+    background-color: rgb(153, 224, 193);
+}

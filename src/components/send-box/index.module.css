@@ -1,1 +1,16 @@
-.wrapper {}
+.wrapper {
+    display: flex;
+    padding: 0 10px;
+}
+
+.input {
+    flex: 1;
+}
+
+.space {
+    width: 5px;
+}
+
+.button {
+    width: 40px;
+}

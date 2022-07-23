@@ -9,11 +9,15 @@ const seatProps = {
     },
     name: {
         type: String,
-        default: '张三'
+        default: ''
     },
     avatarId: {
         type: Number,
         default: 0
+    },
+    score: {
+        type: Number,
+        default: -1
     }
 }
 
@@ -28,8 +32,10 @@ export default defineComponent({
     },
     render() {
         return (
-            <div>
-                <Badge></Badge>
+            <div class={styles.wrapper}>
+                {
+                    this.$props.score > 0 ? (<Badge class={styles.badge} bgColor='green' text={`${this.$props.score}`}></Badge>) : (this.$props.score === 0 ? (<Badge class={styles.badge} bgColor='red' text='答错'></Badge>) : '')
+                }
                 <div class={`${styles.seat} ${this.$props.id === '' ? styles.nobody : ''}`} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
                 <div class={styles.name}>{this.$props.name}</div>
             </ div>

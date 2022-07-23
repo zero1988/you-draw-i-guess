@@ -6,7 +6,7 @@
 
 .wrapper>input {
     width: calc(100% - 16px);
-    height: calc(100% - 2px);
+    height: calc(100% - 5px);
     line-height: 100%;
     outline: none;
     border: none;

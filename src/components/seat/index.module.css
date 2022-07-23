@@ -1,3 +1,7 @@
+.wrapper {
+    position: relative;
+}
+
 .seat {
     width: 48px;
     height: 48px;
@@ -13,4 +17,11 @@
 
 .nobody {
     background-color: gray;
+}
+
+.badge {
+    position: absolute;
+    left: calc(50% - 20px);
+    z-index: 20;
+    top: -5px;
 }

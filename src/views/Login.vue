@@ -32,7 +32,6 @@ const gameModule = namespace('game')
     watch: {
         gameId: {
             handler(val) {
-                console.log(val)
                 if (val > 0) {
                     this.$router.push('/game')
                 }
@@ -75,7 +74,6 @@ export default class Login extends Vue {
     }
 
     private loginCallback(res: any) {
-        console.log(res)
         this.setMe(res.data.data as User)
         this.$connect(`${config.wsUrl}/websocket/?userId=${this.userId}`)
     }
