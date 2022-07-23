@@ -129,6 +129,8 @@ const actions: ActionTree<WebSocketState, any> = {
             case 'waiting_count_down':
                 commit('game/setWaitingNumber', message.data.number, { root: true })
                 break
+            case 'ready_game':
+                commit('game/setGame', JSON.parse(message.data), { root: true })
             case 'start_game':
                 commit('paint/clear', null, { root: true })
                 commit('game/clear', null, { root: true })
@@ -145,6 +147,11 @@ const actions: ActionTree<WebSocketState, any> = {
                 break
             case 'post_message':
                 commit('game/pushMessage', JSON.parse(message.data), { root: true })
+                break
+            case 'change_game':
+                commit('paint/clear', null, { root: true })
+                commit('game/clear', null, { root: true })
+                commit('game/setGame', JSON.parse(message.data), { root: true })
                 break
         }
 
@@ -239,6 +246,16 @@ const actions: ActionTree<WebSocketState, any> = {
                 userName: rootState.game.me.userName,
                 avatarId: rootState.game.me.avatarId,
                 message: message
+            })
+        })
+    },
+    async changeGame({ state, rootState }) {
+        sendMessage(state, {
+            action: 'change_game',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
             })
         })
     }

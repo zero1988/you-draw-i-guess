@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="title-wrapper">
             <div class="change-wrapper">
-                <div class="game icon-refresh" @click="changeGame"></div>
+                <div class="game icon-refresh" @click="change"></div>
             </div>
             <div class="game-num">{{ gameId }}房</div>
             <div class="avatar" :style="{ backgroundImage: avatar }">
@@ -30,8 +30,10 @@
                 </div>
                 <div class="content">
                     <PaintPanel class="flex1" v-if="isRunning" :mode="mode"></PaintPanel>
-                    <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber"></ReadyPanel>
+                    <ReadyPanel class="flex1" v-if="isWaiting" :ready="ready" @toggle="toggleReady"
+                        :time="waitingNumber"></ReadyPanel>
                     <ResultPanel class="flex1" v-if="isPause" :word="key"></ResultPanel>
+                    <ScorePanel class="flex1" v-if="isFinished" :players="ranks"></ScorePanel>
                 </div>
             </div>
         </div>
@@ -59,6 +61,7 @@ import { ref } from 'vue'
 import PaintPanel from '@/components/paint/paint-panel'
 import ReadyPanel from '@/components/ready-panel'
 import ResultPanel from '@/components/result-panel'
+import ScorePanel from '@/components/score-panel'
 import Seat from '@/components/seat'
 import Message from '@/components/message'
 import SendBox from '@/components/send-box'
@@ -79,6 +82,7 @@ const websocketModule = namespace('websocket')
         PaintPanel,
         ReadyPanel,
         ResultPanel,
+        ScorePanel,
         Seat,
         Message,
         SendBox,
@@ -100,6 +104,7 @@ export default class Game extends Vue {
 
     show: boolean = false
     scrollerRef: any = ref()
+    ready: boolean = false
 
     @gameModule.State('gameId') gameId!: string
     @gameModule.State('me') me!: any
@@ -114,6 +119,7 @@ export default class Game extends Vue {
     @gameModule.State('tip2') tip2!: string
     @gameModule.State('messages') messages!: Array<any>
     @gameModule.State('scores') scores!: Map<string, number>
+    @gameModule.State('totalScores') totalScores!: Map<string, number>
     @gameModule.Mutation('setMe') setMe!: (user: User) => void
 
     @websocketModule.State('socket') socket!: any
@@ -121,14 +127,13 @@ export default class Game extends Vue {
     @websocketModule.Action('addPlayer') addPlayer!: () => void
     @websocketModule.Action('addAudience') addAudience!: () => void
     @websocketModule.Action('postMessage') postMessage!: (message: string) => void
+    @websocketModule.Action('changeGame') changeGame!: () => void
 
     mounted() {
         let userId = localStorage.getItem('userId')
         let password = localStorage.getItem('password')
 
         if (userId && password && !this.socket.isConnected) {
-
-
             login(userId, password).then(res => res.json()).then(res => {
                 localStorage.setItem('userId', res.data.userId)
                 localStorage.setItem('userName', res.data.userName)
@@ -141,7 +146,6 @@ export default class Game extends Vue {
         }
     }
 
-
     get isWaiting() {
         return this.status === GameStatus.Waiting
     }
@@ -153,6 +157,15 @@ export default class Game extends Vue {
     get isRunning() {
         return this.status === GameStatus.Running
     }
+
+    get isFinished() {
+        const result = (this.status === GameStatus.Finished)
+        if (result) {
+            this.ready = false
+        }
+        return result
+    }
+
     get cPlayers() {
         const players = this.players.map((player: any) => {
             return {
@@ -186,6 +199,23 @@ export default class Game extends Vue {
         return this.status === GameStatus.Running && this.runningNumber < 40 && this.mode !== 'draw'
     }
 
+    get ranks() {
+        const arr: Array<any> = []
+        const m = this.totalScores as Map<string, number>
+        this.players.forEach((player: any) => {
+            arr.push({
+                userId: player.userId,
+                userName: player.userName,
+                avatarId: player.avatarId,
+                score: (typeof m.has === 'function') ? m.has(player.userId) ? m.get(player.userId) : 0 : 0
+            })
+        })
+        arr.sort((a: any, b: any) => {
+            return b.score - a.score
+        })
+        return arr
+    }
+
     getDrawer(userId: string) {
         let isDrawer = false
         if (this.status === GameStatus.Running) {
@@ -205,20 +235,29 @@ export default class Game extends Vue {
         return this.scores.has(userId) ? this.scores.get(userId) : -1
     }
 
-    changeGame() {
-
+    change() {
+        if (this.status === GameStatus.Waiting) {
+            this.ready = false
+            this.changeGame()
+        } else {
+            alert('游戏已经开始, 无法更换房间')
+        }
     }
 
     send(message: string) {
         if (message === this.key && this.mode === 'guess' && this.status === GameStatus.Running) {
             (document.getElementById('bingo') as any).play()
         }
-
         this.postMessage(message)
     }
 
-    toggleReady(ready: boolean) {
-        ready ? this.addPlayer() : this.addAudience()
+    toggleReady() {
+        this.ready = !this.ready
+        if (this.status === GameStatus.Waiting && this.waitingNumber === -1) {
+            this.ready ? this.addPlayer() : this.addAudience()
+        } else {
+            alert(`游戏已经开始, 无法${this.ready ? '取消准备' : '准备'}`)
+        }
     }
 }
 </script>

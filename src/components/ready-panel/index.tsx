@@ -6,6 +6,10 @@ const readyPanelProps = {
     time: {
         type: Number,
         default: -1
+    },
+    ready: {
+        type: Boolean,
+        default: false
     }
 }
 
@@ -18,16 +22,14 @@ export default defineComponent({
     emits: ['toggle'],
     setup(props, { emit }) {
         const timeRef = ref(20)
-        const readyRef = ref(false)
-        const buttonTextRef = computed(() => readyRef.value ? '取消准备' : '准备')
+        const buttonTextRef = computed(() => props.ready ? '取消准备' : '准备')
 
 
         onMounted(() => {
         })
 
         function toggle() {
-            readyRef.value = !readyRef.value
-            emit('toggle', readyRef.value)
+            emit('toggle')
         }
 
         return {

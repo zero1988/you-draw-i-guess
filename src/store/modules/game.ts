@@ -17,6 +17,7 @@ export interface GameState {
     status: GameStatus
     messages: Array<Message>
     scores: Map<String, Number>
+    totalScores: Map<String, Number>
 }
 
 const state: GameState = {
@@ -30,9 +31,10 @@ const state: GameState = {
     key: '',
     tip1: '两个字',
     tip2: '电器',
-    status: GameStatus.Waiting,
+    status: GameStatus.Finished,
     messages: [],
-    scores: new Map<String, Number>()
+    scores: new Map<String, Number>(),
+    totalScores: new Map<String, Number>
 }
 
 const mutations: MutationTree<GameState> = {
@@ -54,6 +56,7 @@ const mutations: MutationTree<GameState> = {
         state.key = game.word.word
         state.tip1 = game.word.tip1
         state.tip2 = game.word.tip2
+        state.totalScores = game.totalScores
     },
     setWaitingNumber(state: GameState, number: Number) {
         state.waitingNumber = number
@@ -73,6 +76,7 @@ const mutations: MutationTree<GameState> = {
     },
     clear(state: GameState) {
         state.scores = new Map<String, Number>()
+        state.totalScores = new Map<String, Number>()
         state.key = ''
         state.tip1 = ''
         state.tip2 = ''

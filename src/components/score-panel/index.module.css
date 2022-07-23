@@ -1,0 +1,43 @@
+.wrapper {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.score-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: contain;
+}
+
+.name {
+    width: 80px;
+}
+
+.score {
+    width: 80px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.5),
+        2px 2px rgba(0, 0, 0, 0.5),
+        3px 3px rgba(0, 0, 0, 0.5),
+        4px 4px rgba(0, 0, 0, 0.5);
+
+    color: rgb(152, 223, 195);
+}
