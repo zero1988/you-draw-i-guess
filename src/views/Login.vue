@@ -78,7 +78,7 @@ export default class Login extends Vue {
 
         console.log(res.data)
         localStorage.setItem('userId', res.data.userId)
-        localStorage.setItem('userName', res.data.username)
+        localStorage.setItem('userName', res.data.userName)
         localStorage.setItem('password', res.data.password)
         localStorage.setItem('avatarId', res.data.avatarId)
 
