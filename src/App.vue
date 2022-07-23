@@ -23,7 +23,6 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    touch-action: none;
 }
 
 html,
@@ -37,7 +36,7 @@ body {
 }
 
 * {
-    /* touch-action: none; */
+    touch-action: none;
 }
 
 /******scroll*****/

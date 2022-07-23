@@ -76,6 +76,8 @@ const mutations: MutationTree<GameState> = {
         state.key = ''
         state.tip1 = ''
         state.tip2 = ''
+        state.waitingNumber = -1
+        state.runningNumber = -1
     }
 }
 

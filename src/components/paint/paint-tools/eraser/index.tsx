@@ -5,14 +5,9 @@ import { ActionData } from '@/store/modules/paint'
 import draw from './draw'
 const newId = require('uuid').v4
 
-export interface EraserTile {
-    x: number
-    y: number
-}
-
 export interface EraserData {
     size: number
-    tiles: EraserTile[]
+    points: Array<{ x: number, y: number }>
 }
 
 export default defineComponent({
@@ -37,10 +32,7 @@ export default defineComponent({
                 name: 'eraser',
                 data: {
                     size: sizeRef.value * 2,
-                    tiles: [{
-                        x,
-                        y,
-                    }]
+                    points: [{ x, y }]
                 } as EraserData,
                 draw,
             }
@@ -51,15 +43,21 @@ export default defineComponent({
         function move(e: MouseEvent, offsetX: number, offsetY: number) {
             if (eraserDataRef.value) {
 
-                const tiles = eraserDataRef.value.data.tiles
+                const tiles = eraserDataRef.value.data.points
                 const top = tiles[tiles.length - 1]
 
-                eraserDataRef.value.data.tiles.push({
+                const point = {
                     x: top.x + offsetX,
-                    y: top.y + offsetY,
-                })
-                store.commit('paint/update', eraserDataRef.value)
-                store.dispatch('websocket/updatePaint', eraserDataRef.value)
+                    y: top.y + offsetY
+                }
+                // eraserDataRef.value.data.points.push(point)
+
+                const p = {
+                    id: eraserDataRef.value.id,
+                    ...point
+                }
+                store.commit('paint/update', p)
+                store.dispatch('websocket/updatePaint', p)
             }
         }
 

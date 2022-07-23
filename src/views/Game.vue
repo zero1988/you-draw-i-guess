@@ -32,7 +32,6 @@
                     <PaintPanel class="flex1" v-if="isRunning" :mode="mode"></PaintPanel>
                     <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber"></ReadyPanel>
                     <ResultPanel class="flex1" v-if="isPause" :word="key"></ResultPanel>
-
                 </div>
             </div>
         </div>
@@ -42,7 +41,7 @@
                 class="flex1"></Seat>
         </div>
         <div class="message-wrapper">
-            <div>
+            <div ref="scrollerRef">
                 <Message v-for="(message, index) in messages" :key="index" :avatarId="message.avatarId"
                     :message="message.message" :sender="message.userName"></Message>
             </div>
@@ -56,6 +55,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+import { ref } from 'vue'
 import PaintPanel from '@/components/paint/paint-panel'
 import ReadyPanel from '@/components/ready-panel'
 import ResultPanel from '@/components/result-panel'
@@ -66,6 +66,9 @@ import Popup from '@/components/popup'
 import XPillLabel from '@/components/x-pill-label'
 import { User, GameStatus } from '@/models'
 import { namespace } from 'vuex-class'
+import { login } from '@/api/login'
+import config from '@/config'
+
 
 const gameModule = namespace('game')
 const websocketModule = namespace('websocket')
@@ -82,14 +85,21 @@ const websocketModule = namespace('websocket')
         Popup,
         XPillLabel,
     },
-    computed: {
-
-    },
+    watch: {
+        messages: {
+            handler(messages) {
+                this.$nextTick(() => {
+                    this.scrollerRef.scrollTop = this.scrollerRef.scrollHeight
+                })
+            },
+            deep: true
+        }
+    }
 })
 export default class Game extends Vue {
 
     show: boolean = false
-
+    scrollerRef: any = ref()
 
     @gameModule.State('gameId') gameId!: string
     @gameModule.State('me') me!: any
@@ -104,14 +114,33 @@ export default class Game extends Vue {
     @gameModule.State('tip2') tip2!: string
     @gameModule.State('messages') messages!: Array<any>
     @gameModule.State('scores') scores!: Map<string, number>
+    @gameModule.Mutation('setMe') setMe!: (user: User) => void
+
+    @websocketModule.State('socket') socket!: any
 
     @websocketModule.Action('addPlayer') addPlayer!: () => void
     @websocketModule.Action('addAudience') addAudience!: () => void
     @websocketModule.Action('postMessage') postMessage!: (message: string) => void
 
     mounted() {
+        let userId = localStorage.getItem('userId')
+        let password = localStorage.getItem('password')
 
+        if (userId && password && !this.socket.isConnected) {
+
+
+            login(userId, password).then(res => res.json()).then(res => {
+                localStorage.setItem('userId', res.data.userId)
+                localStorage.setItem('userName', res.data.userName)
+                localStorage.setItem('password', res.data.password)
+                localStorage.setItem('avatarId', res.data.avatarId)
+
+                this.setMe(res.data as User)
+                this.$connect(`${config.wsUrl}/websocket/?userId=${res.data.userId}`)
+            })
+        }
     }
+
 
     get isWaiting() {
         return this.status === GameStatus.Waiting
@@ -181,6 +210,10 @@ export default class Game extends Vue {
     }
 
     send(message: string) {
+        if (message === this.key && this.mode === 'guess' && this.status === GameStatus.Running) {
+            (document.getElementById('bingo') as any).play()
+        }
+
         this.postMessage(message)
     }
 
@@ -314,7 +347,7 @@ export default class Game extends Vue {
 }
 
 .message-wrapper>div {
-    height: 100%;
+    height: 100px;
     overflow: auto;
 }
 

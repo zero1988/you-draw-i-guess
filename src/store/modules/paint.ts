@@ -1,4 +1,3 @@
-import { stat } from 'fs'
 import { MutationTree } from 'vuex'
 
 
@@ -63,10 +62,13 @@ const mutations: MutationTree<PaintState> = {
     push(state: PaintState, action: ActionData<any>) {
         state.stack.push(action)
     },
-    update(state: PaintState, action: ActionData<any>) {
-        const index = state.stack.findIndex(item => item.id === action.id)
+    update(state: PaintState, p: any) {
+        const index = state.stack.findIndex(item => item.id === p.id)
         if (index > -1) {
-            state.stack[index] = action
+            state.stack[index].data.points.push({
+                x: p.x,
+                y: p.y
+            })
         }
     },
     undo(state: PaintState) {

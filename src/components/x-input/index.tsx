@@ -41,11 +41,17 @@ export default defineComponent({
             inputRef.value.value = ''
         }
 
+        function blur() {
+            let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+            window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+        }
+
         return {
             input,
             inputRef,
             getValue,
-            clear
+            clear,
+            blur
         }
     },
     render() {
@@ -55,7 +61,7 @@ export default defineComponent({
                     width: `${this.$props.width}`,
                     height: `${this.$props.height}`
                 }}>
-                <input ref='inputRef' type={this.$props.type} placeholder={this.$props.placeholder} value={this.$props.modelValue} onInput={this.input} />
+                <input ref='inputRef' type={this.$props.type} placeholder={this.$props.placeholder} value={this.$props.modelValue} onInput={this.input} onBlur={this.blur} />
             </div>
         )
     }

@@ -61,10 +61,14 @@ export default defineComponent({
                     x: top.x + offsetX,
                     y: top.y + offsetY
                 }
-                brushDataRef.value.data.points.push(point)
+                // brushDataRef.value.data.points.push(point)
+                const p = {
+                    id: brushDataRef.value.id,
+                    ...point
+                }
 
-                store.commit('paint/update', brushDataRef.value)
-                store.dispatch('websocket/updatePaint', brushDataRef.value)
+                store.commit('paint/update', p)
+                store.dispatch('websocket/updatePaint', p)
 
             }
         }

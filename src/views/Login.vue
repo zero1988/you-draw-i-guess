@@ -43,10 +43,10 @@ const gameModule = namespace('game')
 
 export default class Login extends Vue {
 
-    userId: string = 'C1034'
-    username: string = 'zero'
-    password: string = '123'
-    repeat: string = '123'
+    userId: string = ''
+    username: string = ''
+    password: string = ''
+    repeat: string = ''
     isLoginMode: boolean = true
 
     @gameModule.State('gameId') gameId!: number
@@ -61,20 +61,28 @@ export default class Login extends Vue {
     }
 
     doLogin() {
+        (document.getElementById('bgm') as any).play()
 
         if (this.isLoginMode) {
-            login(this.userId, this.password).then(this.loginCallback)
+            login(this.userId, this.password).then(res => res.json()).then(this.loginCallback)
         } else {
             // todo 验证两次密码是否一致
 
             // 随机一个头像编号
             const avatarId = Math.floor(Math.random() * 10) + 1
-            register(this.userId, this.username, this.password, avatarId).then(this.loginCallback)
+            register(this.userId, this.username, this.password, avatarId).then(res => res.json()).then(this.loginCallback)
         }
     }
 
     private loginCallback(res: any) {
-        this.setMe(res.data.data as User)
+
+        console.log(res.data)
+        localStorage.setItem('userId', res.data.userId)
+        localStorage.setItem('userName', res.data.username)
+        localStorage.setItem('password', res.data.password)
+        localStorage.setItem('avatarId', res.data.avatarId)
+
+        this.setMe(res.data as User)
         this.$connect(`${config.wsUrl}/websocket/?userId=${this.userId}`)
     }
 

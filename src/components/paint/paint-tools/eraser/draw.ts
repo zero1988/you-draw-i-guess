@@ -4,10 +4,10 @@ import { EraserData } from '.'
 export default function draw(ctx: CanvasRenderingContext2D,
     action: ActionData<EraserData>) {
     const { size } = action.data
-    const { tiles } = action.data
+    const { points } = action.data
 
-    tiles.forEach(tile => {
+    points.forEach(points => {
         ctx.fillStyle = '#fff'
-        ctx.fillRect(tile.x - size / 2, tile.y - size / 2, size, size)
+        ctx.fillRect(points.x - size / 2, points.y - size / 2, size, size)
     })
 }
