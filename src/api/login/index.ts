@@ -7,10 +7,11 @@ export function login(userId: string, password: string): Promise<any> {
     })
 }
 
-export function register(userId: string, userName: string, password: string): Promise<any> {
+export function register(userId: string, userName: string, password: string, avatarId: number): Promise<any> {
     return Api.post('/user/register', {
         userId,
         userName,
-        password
+        password,
+        avatarId
     })
 }

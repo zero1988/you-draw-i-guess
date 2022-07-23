@@ -62,11 +62,15 @@ export default class Login extends Vue {
     }
 
     doLogin() {
+
         if (this.isLoginMode) {
             login(this.userId, this.password).then(this.loginCallback)
         } else {
             // todo 验证两次密码是否一致
-            register(this.userId, this.username, this.password).then(this.loginCallback)
+
+            // 随机一个头像编号
+            const avatarId = Math.floor(Math.random() * 10) + 1
+            register(this.userId, this.username, this.password, avatarId).then(this.loginCallback)
         }
     }
 

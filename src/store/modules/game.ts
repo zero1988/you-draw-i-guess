@@ -5,7 +5,7 @@ const MaxPlayerCount = 5
 
 export interface GameState {
     me: User
-    gameId: Number
+    gameId: String
     players: Array<User>  // 当前游戏的玩家(准备好的)
     audiences: Array<User> // 未准备的玩家
     turn: Number
@@ -14,7 +14,7 @@ export interface GameState {
 
 const state: GameState = {
     me: new User(),
-    gameId: 0,
+    gameId: '',
     players: [],
     audiences: [],
     turn: 20,
@@ -24,6 +24,12 @@ const state: GameState = {
 const mutations: MutationTree<GameState> = {
     setMe(state: GameState, me: User) {
         state.me = me
+    },
+    updateMe(state: GameState, me: User) {
+        state.me = {
+            ...state.me,
+            ...me,
+        }
     },
     setGame(state: GameState, game: any) {
         state.gameId = game.gameId

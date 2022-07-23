@@ -91,12 +91,20 @@ const actions: ActionTree<WebSocketState, any> = {
                     action: 'join_game',
                     sequence: state.sequence++,
                     data: JSON.stringify({
-                        gameId: rootState.game.gameId,
+                        userId: rootState.game.me.data.userId,
                     })
                 })
                 break
             case 'join_game':
                 commit('game/setGame', message.data, { root: true })
+                sendMessage(state, {
+                    action: 'add_audience',
+                    sequence: state.sequence++,
+                    data: JSON.stringify({
+                        gameId: rootState.game.gameId,
+                        userId: rootState.game.me.data.userId,
+                    })
+                })
                 break
             case 'push_paint_data':
                 commit('paint/push', message.data, { root: true })
@@ -127,7 +135,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.userId,
+                userId: rootState.game.me.data.userId,
                 data: data
             })
         })
@@ -138,7 +146,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.userId,
+                userId: rootState.game.me.data.userId,
                 data: data
             })
         })
@@ -149,7 +157,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.userId,
+                userId: rootState.game.me.data.userId,
             })
         })
     },
@@ -159,7 +167,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.userId,
+                userId: rootState.game.me.data.userId,
             })
         })
     }
