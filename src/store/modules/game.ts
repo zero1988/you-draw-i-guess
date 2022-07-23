@@ -7,7 +7,8 @@ export interface GameState {
     me: User
     gameId: String
     players: Array<User>  // 当前游戏的玩家(准备好的)
-    audiences: Array<User> // 未准备的玩家
+    audiences: Array<User> // 未准备的玩家 
+    waitingNumber: Number
     turn: Number
     status: GameStatus
 }
@@ -17,6 +18,7 @@ const state: GameState = {
     gameId: '',
     players: [],
     audiences: [],
+    waitingNumber: -1,
     turn: 20,
     status: GameStatus.Waiting,
 }
@@ -38,6 +40,9 @@ const mutations: MutationTree<GameState> = {
         state.turn = game.turn
         state.status = game.status
     },
+    setWaitingNumber(state: GameState, number: Number) {
+        state.waitingNumber = number
+    }
 }
 
 export default {

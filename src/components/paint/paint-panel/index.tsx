@@ -6,10 +6,15 @@ import PaintTools from '../paint-tools'
 import ColorPad from '../paint-color-pad'
 import SizePad from '../paint-size-pad'
 import styles from './index.module.css'
+import BrushDraw from '../paint-tools/brush/draw'
+import EraserDraw from '../paint-tools/eraser/draw'
 
 
 const paintPanelProps = {
-
+    mode: {
+        type: String as PropType<'draw' | 'guess' | 'watch'>,
+        default: 'guess'
+    }
 }
 
 export default defineComponent({
@@ -29,7 +34,6 @@ export default defineComponent({
 
         onMounted((): void => {
             if (canvasRef.value) {
-
                 const canvas = (canvasRef.value as HTMLCanvasElement)
                 const rect = canvas.getBoundingClientRect()
                 canvas.style.width = `${rect.width}px`
@@ -50,7 +54,15 @@ export default defineComponent({
                 if (index === 0) {
                     clearRect()
                 }
-                action.draw((canvasRef.value as any).getContext('2d'), action)
+                if (action.draw === undefined) {
+                    if (action.name === 'brush') {
+                        BrushDraw((canvasRef.value as any).getContext('2d'), action)
+                    } else if (action.name === 'eraser') {
+                        EraserDraw((canvasRef.value as any).getContext('2d'), action)
+                    }
+                } else {
+                    action.draw((canvasRef.value as any).getContext('2d'), action)
+                }
             })
         })
 
@@ -63,18 +75,23 @@ export default defineComponent({
         }
 
         function canvasDown(e: MouseEvent) {
-            padRef.value = ''
-
-            store.state.paint.handles.down?.(e)
+            if (props.mode === 'draw') {
+                padRef.value = ''
+                store.state.paint.handles.down?.(e)
+            }
         }
 
         function canvasMove(e: MouseEvent, offsetX: number, offsetY: number): void {
-            store.state.paint.handles.move?.(e, offsetX, offsetY)
+            if (props.mode === 'draw') {
+                store.state.paint.handles.move?.(e, offsetX, offsetY)
+            }
 
         }
 
         function canvasUp(e: MouseEvent) {
-            store.state.paint.handles.up?.(e)
+            if (props.mode === 'draw') {
+                store.state.paint.handles.up?.(e)
+            }
         }
 
         function togglePad(p: string) {
@@ -93,7 +110,9 @@ export default defineComponent({
                 <div class={styles['canvas-wrapper']}>
                     <canvas class={styles.canvas} ref='canvasRef' ></canvas>
                 </div>
-                <PaintTools onTogglePad={this.togglePad}></PaintTools>
+                {
+                    this.$props.mode === 'draw' ? <PaintTools onTogglePad={this.togglePad}></PaintTools> : ''
+                }
                 <SizePad class={styles.pad} v-show={this.padRef === 'brush'} mode="solid"></SizePad>
                 <SizePad class={styles.pad} v-show={this.padRef === 'eraser'} mode="hollow"></SizePad>
                 <ColorPad class={styles.pad} v-show={this.padRef === 'color'}></ColorPad>

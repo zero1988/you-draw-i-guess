@@ -12,8 +12,8 @@ const seatProps = {
         default: '张三'
     },
     avatarId: {
-        type: String,
-        default: '0'
+        type: Number,
+        default: 0
     }
 }
 
@@ -31,7 +31,7 @@ export default defineComponent({
             <div>
                 <Badge></Badge>
                 <div class={`${styles.seat} ${this.$props.id === '' ? styles.nobody : ''}`} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
-                <div class="name">{this.$props.name}</div>
+                <div class={styles.name}>{this.$props.name}</div>
             </ div>
         )
     }

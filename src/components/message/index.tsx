@@ -3,8 +3,8 @@ import styles from './index.module.css'
 
 const messageProps = {
     avatarId: {
-        type: String,
-        default: '1'
+        type: Number,
+        default: 1
     },
     sender: {
         type: String,

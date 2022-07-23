@@ -34,6 +34,7 @@ export default defineComponent({
 
         function clear() {
             store.commit('paint/clear')
+            store.dispatch('websocket/clearPaint')
         }
 
         return {

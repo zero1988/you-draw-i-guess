@@ -18,13 +18,14 @@
                     </XPillLabel>
                 </div>
                 <div class="content">
-                    <PaintPanel class="flex1" v-if="{ isRunning }"></PaintPanel>
-                    <ReadyPanel class="flex1" v-if="{ isWaiting }"></ReadyPanel>
+                    <PaintPanel class="flex1" v-if="isRunning" :mode="mode"></PaintPanel>
+                    <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber">
+                    </ReadyPanel>
                 </div>
             </div>
         </div>
         <div class="seat-wrapper">
-            <Seat v-for="(player) in players" :key="player.userId" :id="player.userId" :name="player.userName"
+            <Seat v-for="(player) in cPlayers" :key="player.userId" :id="player.userId" :name="player.userName"
                 :avatarId="player.avatarId" class="flex1"></Seat>
         </div>
         <div class="message-wrapper">
@@ -52,6 +53,7 @@ import { User, GameStatus } from '@/models'
 import { namespace } from 'vuex-class'
 
 const gameModule = namespace('game')
+const websocketModule = namespace('websocket')
 
 
 @Options({
@@ -65,28 +67,59 @@ const gameModule = namespace('game')
         XPillLabel
     },
     computed: {
-        isWaiting() {
-            return this.status === GameStatus.Waiting
-        },
-        isRunning() {
-            return this.status === GameStatus.Running
-        }
+
     },
 })
 export default class Game extends Vue {
 
     show: boolean = false
-    isWaiting: boolean = false
-    isRunning: boolean = false
+
 
     @gameModule.State('gameId') gameId!: number
+    @gameModule.State('me') me!: any
+    @gameModule.State('turn') turn!: number
     @gameModule.State('players') players!: Array<User>
     @gameModule.State('audiences') audiences!: Array<User>
     @gameModule.State('status') status!: GameStatus
+    @gameModule.State('waitingNumber') waitingNumber!: number
 
+    @websocketModule.Action('addPlayer') addPlayer!: () => void
+    @websocketModule.Action('addAudience') addAudience!: () => void
 
     mounted() {
 
+    }
+
+    get isWaiting() {
+        return this.status === GameStatus.Waiting
+    }
+    get isRunning() {
+        return this.status === GameStatus.Running
+    }
+    get cPlayers() {
+        const players = this.players.map((player: any) => {
+            return {
+                userId: player.UserId,
+                userName: player.UserName,
+                avatarId: player.AvatarId
+            } as User
+        })
+        const len = 5 - players.length
+        for (let i = 0; i < len; i++) {
+            players.push(new User())
+        }
+        console.log(players)
+        return players
+    }
+    get mode() {
+        const index = this.players.findIndex((player: any) => {
+            return player.UserId === this.me.userId
+        })
+        return index === this.turn ? 'draw' : 'guess'
+    }
+
+    toggleReady(ready: boolean) {
+        ready ? this.addPlayer() : this.addAudience()
     }
 }
 </script>
@@ -107,6 +140,8 @@ export default class Game extends Vue {
     padding: 10px 10px;
     border: 2px solid #000;
     border-radius: 20px;
+    background-color: rgb(223, 237, 248);
+    margin: 10px;
 }
 
 .main-wrapper>div {

@@ -6,10 +6,10 @@
         <XInput :placeholder="'密码'" :type="'password'" v-model="password" class="margin-top-10"></XInput>
         <XInput v-if="!isLoginMode" :placeholder="'再输入一次'" :type="'password'" v-model="repeat" class="margin-top-10">
         </XInput>
-        <XButton @click="doLogin" class="margin-top-10">
+        <XButton @btnClick="doLogin" class="margin-top-10">
             {{ buttonText }}
         </XButton>
-        <XButton :link="true" @click="toggleRegister" class="margin-top-10">{{ linkText }}</XButton>
+        <XButton :link="true" @btnClick="toggleRegister" class="margin-top-10">{{ linkText }}</XButton>
     </div>
 </template>
 
@@ -75,7 +75,8 @@ export default class Login extends Vue {
     }
 
     private loginCallback(res: any) {
-        this.setMe(res.data as User)
+        console.log(res)
+        this.setMe(res.data.data as User)
         this.$connect(`${config.wsUrl}/websocket/?userId=${this.userId}`)
     }
 

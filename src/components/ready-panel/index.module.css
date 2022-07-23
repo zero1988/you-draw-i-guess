@@ -1,9 +1,52 @@
 .wrapper {
     font-size: 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.desc {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 0 20px;
+}
+
+.desc .title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.button-wrapper>div {
+
+    border-radius: 40px;
+}
+
+.ready,
+.time {
+    font-size: 20px;
+    height: 60px;
+    line-height: 60px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .time {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
+    font-size: 48px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.8),
+        2px 2px rgba(0, 0, 0, 0.8),
+        3px 3px rgba(0, 0, 0, 0.8),
+        4px 4px rgba(0, 0, 0, 0.8),
+        5px 5px rgba(0, 0, 0, 0.8),
+        5px 5px rgba(0, 0, 0, 0.8);
+    color: rgb(152, 223, 195);
 }

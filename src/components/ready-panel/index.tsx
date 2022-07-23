@@ -1,9 +1,12 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import XButton from '@/components/x-button'
 import styles from './index.module.css'
 
 const readyPanelProps = {
-
+    time: {
+        type: Number,
+        default: -1
+    }
 }
 
 export default defineComponent({
@@ -12,29 +15,44 @@ export default defineComponent({
     components: {
         XButton
     },
-    setup() {
+    emits: ['toggle'],
+    setup(props, { emit }) {
         const timeRef = ref(20)
+        const readyRef = ref(false)
+        const buttonTextRef = computed(() => readyRef.value ? '取消准备' : '准备')
+
 
         onMounted(() => {
-            const timeInterval = setInterval(() => {
-                timeRef.value--
-                if (timeRef.value === 0) {
-                    clearInterval(timeInterval)
-                }
-            }, 1000)
         })
+
+        function toggle() {
+            readyRef.value = !readyRef.value
+            emit('toggle', readyRef.value)
+        }
 
         return {
             timeRef,
+            buttonTextRef,
+            toggle
         }
     },
     render() {
         return (
             <div class={styles.wrapper}>
-                <div>准备阶段</div>
-                <div class={styles.time}> {this.timeRef}</div>
-                <div>
-                    <XButton>准备</XButton>
+                <div class={styles.desc}>
+                    <p class={styles.title}>- 游戏规则 -</p>
+                    <p>绘画阶段描述者根据所选题目进行会话，其他人答题</p>
+                    <p>答题者根据答对的先后顺序获得不同分数</p>
+                    <p>描述者根据猜对人数获得分数，所有人都猜对了则不会得分</p>
+                    <p>最后根据最终分数进行排名获得对应的奖励或惩罚</p>
+                </div>
+                {
+                    this.$props.time < 0 ? (<div class={styles.ready}>准备阶段</div>) : (
+                        <div class={styles.time}>{this.$props.time}</div>
+                    )
+                }
+                <div class={styles['button-wrapper']}>
+                    <XButton width='50%' height='40px' color='yellow' onBtnClick={this.toggle}>{this.buttonTextRef}</XButton>
                 </div>
             </div>
         )

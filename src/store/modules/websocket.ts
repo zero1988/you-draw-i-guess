@@ -91,7 +91,7 @@ const actions: ActionTree<WebSocketState, any> = {
                     action: 'join_game',
                     sequence: state.sequence++,
                     data: JSON.stringify({
-                        userId: rootState.game.me.data.userId,
+                        userId: rootState.game.me.userId,
                     })
                 })
                 break
@@ -102,7 +102,7 @@ const actions: ActionTree<WebSocketState, any> = {
                     sequence: state.sequence++,
                     data: JSON.stringify({
                         gameId: rootState.game.gameId,
-                        userId: rootState.game.me.data.userId,
+                        userId: rootState.game.me.userId,
                     })
                 })
                 break
@@ -113,10 +113,25 @@ const actions: ActionTree<WebSocketState, any> = {
                 commit('paint/update', message.data, { root: true })
                 break
             case 'undo_paint_data':
-                commit('paint/undo', { root: true })
+                commit('paint/undo', null, { root: true })
                 break
             case 'redo_paint_data':
-                commit('paint/redo', { root: true })
+                commit('paint/redo', null, { root: true })
+                break
+            case 'clear_paint_data':
+                commit('paint/clear', null, { root: true })
+                break
+            case 'add_audience':
+                commit('game/setGame', message.data, { root: true })
+                break
+            case 'add_player':
+                commit('game/setGame', message.data, { root: true })
+                break
+            case 'waiting_count_down':
+                commit('game/setWaitingNumber', message.data.number, { root: true })
+                break
+            case 'start_game':
+                commit('game/setGame', message.data, { root: true })
                 break
         }
 
@@ -135,7 +150,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.data.userId,
+                userId: rootState.game.me.userId,
                 data: data
             })
         })
@@ -146,7 +161,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.data.userId,
+                userId: rootState.game.me.userId,
                 data: data
             })
         })
@@ -157,7 +172,7 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.data.userId,
+                userId: rootState.game.me.userId,
             })
         })
     },
@@ -167,7 +182,37 @@ const actions: ActionTree<WebSocketState, any> = {
             sequence: state.sequence++,
             data: JSON.stringify({
                 gameId: rootState.game.gameId,
-                userId: rootState.game.me.data.userId,
+                userId: rootState.game.me.userId,
+            })
+        })
+    },
+    async clearPaint({ state, rootState }) {
+        sendMessage(state, {
+            action: 'clear_paint_data',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+            })
+        })
+    },
+    async addPlayer({ state, rootState }) {
+        sendMessage(state, {
+            action: 'add_player',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
+            })
+        })
+    },
+    async addAudience({ state, rootState }) {
+        sendMessage(state, {
+            action: 'add_audience',
+            sequence: state.sequence++,
+            data: JSON.stringify({
+                gameId: rootState.game.gameId,
+                userId: rootState.game.me.userId,
             })
         })
     }

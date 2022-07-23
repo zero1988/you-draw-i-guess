@@ -1,3 +1,4 @@
+import { createPublicKey } from 'crypto'
 import { defineComponent, PropType } from 'vue'
 import styles from './index.module.css'
 
@@ -23,8 +24,14 @@ const buttonProps = {
 export default defineComponent({
     name: 'XButton',
     props: buttonProps,
-    setup() {
-
+    emits: ['btnClick'],
+    setup(props, { emit }) {
+        function click() {
+            emit('btnClick')
+        }
+        return {
+            click
+        }
     },
     render() {
         return (
@@ -34,7 +41,7 @@ export default defineComponent({
                     width: `${this.$props.width}`,
                     height: `${this.$props.height}`,
                     lineHeight: `${this.$props.height}`
-                }}>
+                }} onClick={this.click}>
                 {this.$slots.default?.()}
             </div>
         )
