@@ -1,7 +1,6 @@
 import { MutationTree } from 'vuex'
 import { User, GameStatus, Message } from '@/models'
 
-
 const MaxPlayerCount = 5
 
 export interface GameState {
@@ -17,6 +16,7 @@ export interface GameState {
     tip2: String
     status: GameStatus
     messages: Array<Message>
+    scores: Map<String, Number>
 }
 
 const state: GameState = {
@@ -31,7 +31,8 @@ const state: GameState = {
     tip1: '两个字',
     tip2: '电器',
     status: GameStatus.Waiting,
-    messages: []
+    messages: [],
+    scores: new Map<String, Number>()
 }
 
 const mutations: MutationTree<GameState> = {
@@ -50,6 +51,9 @@ const mutations: MutationTree<GameState> = {
         state.audiences = game.audiences
         state.turn = game.turn
         state.status = game.status
+        state.key = game.word.word
+        state.tip1 = game.word.tip1
+        state.tip2 = game.word.tip2
     },
     setWaitingNumber(state: GameState, number: Number) {
         state.waitingNumber = number
@@ -58,7 +62,20 @@ const mutations: MutationTree<GameState> = {
         state.runningNumber = number
     },
     pushMessage(state: GameState, message: Message) {
-        state.messages.push(message)
+        const score = message.score
+        if (message.message !== '') {
+            state.messages.push(message)
+        }
+        if (score !== -1) {
+            state.scores.set(message.userId, score)
+        }
+
+    },
+    clear(state: GameState) {
+        state.scores = new Map<String, Number>()
+        state.key = ''
+        state.tip1 = ''
+        state.tip2 = ''
     }
 }
 

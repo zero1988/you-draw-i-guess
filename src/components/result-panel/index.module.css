@@ -1,0 +1,21 @@
+.wrapper {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.image {
+    flex: 1;
+    background-size: contain;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 10px 0 20px;
+}
+
+.answer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}

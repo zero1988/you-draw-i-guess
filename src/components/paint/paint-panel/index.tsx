@@ -110,13 +110,11 @@ export default defineComponent({
                 <div class={styles['canvas-wrapper']}>
                     <canvas class={styles.canvas} ref='canvasRef' ></canvas>
                 </div>
-                {
-                    this.$props.mode === 'draw' ? <PaintTools onTogglePad={this.togglePad}></PaintTools> : ''
-                }
+                <PaintTools style={{ visibility: this.$props.mode === 'draw' ? 'visible' : 'hidden' }} onTogglePad={this.togglePad}></PaintTools>
                 <SizePad class={styles.pad} v-show={this.padRef === 'brush'} mode="solid"></SizePad>
                 <SizePad class={styles.pad} v-show={this.padRef === 'eraser'} mode="hollow"></SizePad>
                 <ColorPad class={styles.pad} v-show={this.padRef === 'color'}></ColorPad>
-            </div >
+            </div>
         )
     }
 })

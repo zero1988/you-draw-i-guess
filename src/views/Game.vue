@@ -15,26 +15,31 @@
         </div>
         <div class="main-wrapper">
             <div>
-                <div class="top" v-if="isRunning && runningNumber > 0">
+                <div class="top" :style="{
+                    visibility: isRunning && runningNumber > 0 ? 'visible' : 'hidden'
+                }">
                     <XPillLabel :width="300" :height="30" :leftWidth="80">
                         <template v-slot:left>
                             <span>{{ runningNumber }}</span>
                         </template>
                         <template v-slot:right>
-                            {{ tip1 }} {{ tip2 }}
+                            <span v-show="showTip1">{{ tip1 }}</span> <span v-show="showTip2">{{ tip2 }}</span>
+                            <span v-show="mode === 'draw'"> {{ key }}</span>
                         </template>
                     </XPillLabel>
-                    <div class="drawer-wrapper">{{ drawer }}</div>
                 </div>
                 <div class="content">
                     <PaintPanel class="flex1" v-if="isRunning" :mode="mode"></PaintPanel>
                     <ReadyPanel class="flex1" v-if="isWaiting" @toggle="toggleReady" :time="waitingNumber"></ReadyPanel>
+                    <ResultPanel class="flex1" v-if="isPause" :word="key"></ResultPanel>
+
                 </div>
             </div>
         </div>
         <div class="seat-wrapper">
             <Seat v-for="(player) in cPlayers" :key="player.userId" :id="player.userId" :name="player.userName"
-                :avatarId="player.avatarId" class="flex1"></Seat>
+                :avatarId="player.avatarId" :isDrawer="getDrawer(player.userId)" :score="getScore(player.userId)"
+                class="flex1"></Seat>
         </div>
         <div class="message-wrapper">
             <div>
@@ -53,6 +58,7 @@
 import { Options, Vue } from 'vue-class-component'
 import PaintPanel from '@/components/paint/paint-panel'
 import ReadyPanel from '@/components/ready-panel'
+import ResultPanel from '@/components/result-panel'
 import Seat from '@/components/seat'
 import Message from '@/components/message'
 import SendBox from '@/components/send-box'
@@ -69,6 +75,7 @@ const websocketModule = namespace('websocket')
     components: {
         PaintPanel,
         ReadyPanel,
+        ResultPanel,
         Seat,
         Message,
         SendBox,
@@ -96,6 +103,7 @@ export default class Game extends Vue {
     @gameModule.State('tip1') tip1!: string
     @gameModule.State('tip2') tip2!: string
     @gameModule.State('messages') messages!: Array<any>
+    @gameModule.State('scores') scores!: Map<string, number>
 
     @websocketModule.Action('addPlayer') addPlayer!: () => void
     @websocketModule.Action('addAudience') addAudience!: () => void
@@ -108,6 +116,11 @@ export default class Game extends Vue {
     get isWaiting() {
         return this.status === GameStatus.Waiting
     }
+
+    get isPause() {
+        return this.status === GameStatus.Pause
+    }
+
     get isRunning() {
         return this.status === GameStatus.Running
     }
@@ -136,17 +149,31 @@ export default class Game extends Vue {
         return `url(src/assets/avatars/${this.me.avatarId}.png)`
     }
 
-    get drawer() {
+    get showTip1() {
+        return this.status === GameStatus.Running && this.mode !== 'draw'
+    }
+
+    get showTip2() {
+        return this.status === GameStatus.Running && this.runningNumber < 40 && this.mode !== 'draw'
+    }
+
+    getDrawer(userId: string) {
+        let isDrawer = false
         if (this.status === GameStatus.Running) {
-            let uname = ''
             this.players.forEach((player: any, index: number) => {
                 if (index === this.turn) {
-                    uname = player.userName
+                    if (userId === player.userId) {
+                        isDrawer = true
+                    }
                 }
             })
-            return `当前作者: ${uname}`
+
         }
-        return ''
+        return isDrawer
+    }
+
+    getScore(userId: string) {
+        return this.scores.has(userId) ? this.scores.get(userId) : -1
     }
 
     changeGame() {

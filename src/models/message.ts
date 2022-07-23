@@ -4,4 +4,5 @@ export class Message {
     gameId!: string
     message!: string
     avatarId!: number
+    score!: number
 }

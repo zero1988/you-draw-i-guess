@@ -131,6 +131,7 @@ const actions: ActionTree<WebSocketState, any> = {
                 break
             case 'start_game':
                 commit('paint/clear', null, { root: true })
+                commit('game/clear', null, { root: true })
                 commit('game/setGame', JSON.parse(message.data), { root: true })
                 break
             case 'running_count_down':

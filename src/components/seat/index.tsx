@@ -18,7 +18,12 @@ const seatProps = {
     score: {
         type: Number,
         default: -1
+    },
+    isDrawer: {
+        type: Boolean,
+        default: false
     }
+
 }
 
 export default defineComponent({
@@ -34,7 +39,11 @@ export default defineComponent({
         return (
             <div class={styles.wrapper}>
                 {
-                    this.$props.score > 0 ? (<Badge class={styles.badge} bgColor='green' text={`${this.$props.score}`}></Badge>) : (this.$props.score === 0 ? (<Badge class={styles.badge} bgColor='red' text='答错'></Badge>) : '')
+                    <Badge class={styles.badge}
+                        v-show={this.$props.isDrawer || this.$props.score !== -1}
+                        bgColor={this.$props.isDrawer ? 'yellow' : (this.$props.score > 0 ? 'green' : 'red')}
+                        text={this.$props.isDrawer ? `绘画中` : (this.$props.score > 0 ? `+${this.$props.score}` : `答错`)}></Badge>
+
                 }
                 <div class={`${styles.seat} ${this.$props.id === '' ? styles.nobody : ''}`} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
                 <div class={styles.name}>{this.$props.name}</div>
