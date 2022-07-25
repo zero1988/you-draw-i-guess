@@ -25,7 +25,7 @@ export default defineComponent({
     render() {
         return (
             <div class={styles.wrapper}>
-                <div class={styles.avatar} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
+                <div class={styles.avatar} style={{ backgroundImage: `url(avatars/${this.$props.avatarId}.png)` }}></div>
                 <div class={styles['message-wrapper']}>
                     <span class={styles.sender}>{this.$props.sender}: </span>
                     <span class={styles.message}>{this.$props.message}</span>

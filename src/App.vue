@@ -37,6 +37,10 @@ body {
 
 * {
     touch-action: none;
+    touch-callout: none;
+    -webkit-touch-callout: none;
+    /* user-select: none;
+    -webkit-user-select: none; */
 }
 
 /******scroll*****/

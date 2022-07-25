@@ -36,7 +36,7 @@ export default defineComponent({
                         return (
                             <div class={styles['score-wrapper']}>
                                 <div class={styles.avatar} style={{
-                                    backgroundImage: `url(src/assets/avatars/${player.avatarId}.png)`
+                                    backgroundImage: `url(avatars/${player.avatarId}.png)`
                                 }}></div>
                                 <div class={styles.name}>{player.userName}</div>
                                 <div class={styles.score}>{`+${player.score}`}</div>

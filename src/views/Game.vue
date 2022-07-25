@@ -188,7 +188,7 @@ export default class Game extends Vue {
     }
 
     get avatar() {
-        return `url(src/assets/avatars/${this.me.avatarId}.png)`
+        return `url(avatars/${this.me.avatarId}.png)`
     }
 
     get showTip1() {
@@ -201,18 +201,23 @@ export default class Game extends Vue {
 
     get ranks() {
         const arr: Array<any> = []
-        const m = this.totalScores as Map<string, number>
         this.players.forEach((player: any) => {
+            let s: number = 0
+            try {
+                s = this.totalScores[player.userId] as number
+            } catch { }
+
             arr.push({
                 userId: player.userId,
                 userName: player.userName,
                 avatarId: player.avatarId,
-                score: (typeof m.has === 'function') ? m.has(player.userId) ? m.get(player.userId) : 0 : 0
+                score: s
             })
         })
         arr.sort((a: any, b: any) => {
             return b.score - a.score
         })
+        console.log(arr)
         return arr
     }
 
@@ -336,6 +341,8 @@ export default class Game extends Vue {
     border-radius: 20px;
     background-color: rgb(223, 237, 248);
     margin: 10px;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .main-wrapper>div {

@@ -45,7 +45,7 @@ export default defineComponent({
                         text={this.$props.isDrawer ? `绘画中` : (this.$props.score > 0 ? `+${this.$props.score}` : `答错`)}></Badge>
 
                 }
-                <div class={`${styles.seat} ${this.$props.id === '' ? styles.nobody : ''}`} style={{ backgroundImage: `url(src/assets/avatars/${this.$props.avatarId}.png)` }}></div>
+                <div class={`${styles.seat} ${this.$props.id === '' ? styles.nobody : ''}`} style={{ backgroundImage: `url(avatars/${this.$props.avatarId}.png)` }}></div>
                 <div class={styles.name}>{this.$props.name}</div>
             </ div>
         )
